@@ -2,26 +2,26 @@ import * as React from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import '@mantine/core/styles.css';
 import { MantineProvider, createTheme, MantineColorsTuple } from '@mantine/core';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 import { Title, Text, Button, Container, Group, Loader } from '@mantine/core';
 import classes from './ServerError.module.css';
 
-const myColor: MantineColorsTuple = [
-  '#f0f9f8',
-  '#e3f0ee',
-  '#c2e1dc',
-  '#9dd0c8',
-  '#7fc3b8',
-  '#6cbbad',
-  '#60b8a8',
-  '#50a192',
-  '#449082',
-  '#317d70',
-];
-
 const theme = createTheme({
+  primaryColor: 'seaGreen',
   colors: {
-    myColor,
+    seaGreen: [
+      '#f0f9f8',
+      '#e3f0ee',
+      '#c2e1dc',
+      '#9dd0c8',
+      '#7fc3b8',
+      '#6cbbad',
+      '#60b8a8',
+      '#50a192',
+      '#449082',
+      '#317d70',
+    ],
   },
 });
 
@@ -59,7 +59,9 @@ export const AppProvider = ({ children }: AppProviderProps) => {
       }
     >
       <ErrorBoundary FallbackComponent={ErrorFallback}>
-        <MantineProvider theme={theme}>{children}</MantineProvider>
+        <MantineProvider theme={theme}>
+          <Router>{children}</Router>
+        </MantineProvider>
       </ErrorBoundary>
     </React.Suspense>
   );
