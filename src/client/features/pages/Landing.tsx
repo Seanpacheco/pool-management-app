@@ -1,27 +1,32 @@
 import * as React from 'react';
 import { Container, Text, Button, Group } from '@mantine/core';
-import classes from './HeroTitle.module.css';
 
-export const LandingPageLayout = () => {
+import classes from './LandingPage.module.css';
+
+export function LandingPage() {
   return (
     <div className={classes.wrapper}>
       <Container size={700} className={classes.inner}>
         <h1 className={classes.title}>
           A{' '}
-          <Text component="span" variant="gradient" gradient={{ from: 'blue', to: 'cyan' }} inherit>
+          <Text component="span" variant="gradient" gradient={{ from: 'seaGreen.4', to: 'seaGreen.8' }} inherit>
             fully featured
           </Text>{' '}
-          React components and hooks library
+          Pool management system
         </h1>
 
-        <Text className={classes.description} c="dimmed">
-          Build fully functional accessible web applications with ease – Mantine includes more than 100 customizable
-          components and hooks to cover you in any situation
+        <Text className={classes.description} color="dimmed">
+          Manage your pool and spa, track your chemical levels, get reccomendations and more.
         </Text>
 
         <Group className={classes.controls}>
-          <Button size="xl" className={classes.control} variant="gradient" gradient={{ from: 'blue', to: 'cyan' }}>
-            Get started
+          <Button
+            size="xl"
+            className={classes.control}
+            variant="gradient"
+            gradient={{ from: 'seaGreen.4', to: 'seaGreen.8' }}
+          >
+            Sign up
           </Button>
 
           <Button
@@ -31,10 +36,10 @@ export const LandingPageLayout = () => {
             variant="default"
             className={classes.control}
           >
-            GitHub
+            Log in
           </Button>
         </Group>
       </Container>
     </div>
   );
-};
+}
