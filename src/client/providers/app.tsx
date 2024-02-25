@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import '@mantine/core/styles.css';
-import { MantineProvider, createTheme, MantineColorsTuple } from '@mantine/core';
+import { MantineProvider, createTheme } from '@mantine/core';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import { Title, Text, Button, Container, Group, Loader } from '@mantine/core';

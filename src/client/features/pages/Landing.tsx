@@ -29,13 +29,7 @@ export function LandingPage() {
             Sign up
           </Button>
 
-          <Button
-            component="a"
-            href="https://github.com/mantinedev/mantine"
-            size="xl"
-            variant="default"
-            className={classes.control}
-          >
+          <Button component="a" href="/dashboard" size="xl" variant="default" className={classes.control}>
             Log in
           </Button>
         </Group>
