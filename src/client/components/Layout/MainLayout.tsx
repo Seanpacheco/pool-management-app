@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Group, Button, Divider, Box, Burger, Drawer, ScrollArea, rem, useMantineTheme } from '@mantine/core';
+import { Group, Divider, Box, Burger, Drawer, ScrollArea, rem } from '@mantine/core';
+import { LogOutButton } from '../../features/auth/components/LogOutButton';
 
 import { useDisclosure } from '@mantine/hooks';
 import classes from './MainLayout.module.css';
@@ -10,18 +11,16 @@ type MainLayoutProps = {
 
 export const MainLayout = ({ children }: MainLayoutProps) => {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
-  const theme = useMantineTheme();
 
   return (
     <>
       <Box pb={120}>
         <header className={classes.header}>
           <Group justify="space-between" h="100%">
-            <h1 className={classes.logo}>Mantine</h1>
+            <h1 className={classes.logo}>Pool Manager</h1>
 
             <Group visibleFrom="sm">
-              <Button variant="default">Log in</Button>
-              <Button>Sign up</Button>
+              <LogOutButton />
             </Group>
 
             <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom="sm" />
@@ -42,8 +41,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
             <Divider my="sm" />
 
             <Group justify="center" grow pb="xl" px="md">
-              <Button variant="default">Log in</Button>
-              <Button color={theme.colors.seaGreen[6]}>Sign up</Button>
+              <LogOutButton />
             </Group>
           </ScrollArea>
         </Drawer>

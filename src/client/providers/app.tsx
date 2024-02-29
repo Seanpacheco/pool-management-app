@@ -3,6 +3,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import '@mantine/core/styles.css';
 import { MantineProvider, createTheme } from '@mantine/core';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { Auth0ProviderWithNavigate } from './Auth0ProviderWithNavigate';
 
 import { Title, Text, Button, Container, Group, Loader } from '@mantine/core';
 import classes from './ServerError.module.css';
@@ -53,15 +54,17 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   return (
     <React.Suspense
       fallback={
-        <div className="flex items-center justify-center w-screen h-screen">
+        <div>
           <Loader size={'xl'} />
         </div>
       }
     >
       <ErrorBoundary FallbackComponent={ErrorFallback}>
-        <MantineProvider theme={theme}>
-          <Router>{children}</Router>
-        </MantineProvider>
+        <Router>
+          <Auth0ProviderWithNavigate>
+            <MantineProvider theme={theme}>{children}</MantineProvider>
+          </Auth0ProviderWithNavigate>
+        </Router>
       </ErrorBoundary>
     </React.Suspense>
   );

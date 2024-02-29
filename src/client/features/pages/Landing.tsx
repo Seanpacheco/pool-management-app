@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { Container, Text, Button, Group } from '@mantine/core';
+import { Container, Text, Affix, Group } from '@mantine/core';
+import { LogInButton } from '../auth/components/LogInButton';
+import { SignUpButton } from '../auth/components/SignUpButton';
+import { LightDarkToggle } from '../LightDarkToggle/LightDarkToggle';
 
 import classes from './LandingPage.module.css';
 
@@ -14,26 +17,18 @@ export function LandingPage() {
           </Text>{' '}
           Pool management system
         </h1>
-
         <Text className={classes.description} color="dimmed">
           Manage your pool and spa, track your chemical levels, get reccomendations and more.
         </Text>
-
         <Group className={classes.controls}>
-          <Button
-            size="xl"
-            className={classes.control}
-            variant="gradient"
-            gradient={{ from: 'seaGreen.4', to: 'seaGreen.8' }}
-          >
-            Sign up
-          </Button>
+          <SignUpButton />
 
-          <Button component="a" href="/dashboard" size="xl" variant="default" className={classes.control}>
-            Log in
-          </Button>
-        </Group>
+          <LogInButton />
+        </Group>{' '}
       </Container>
+      <Affix position={{ bottom: 20, right: 20 }}>
+        <LightDarkToggle />
+      </Affix>
     </div>
   );
 }
