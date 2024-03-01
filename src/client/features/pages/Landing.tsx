@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Container, Text, Affix, Group } from '@mantine/core';
 import { LogInButton } from '../auth/components/LogInButton';
 import { SignUpButton } from '../auth/components/SignUpButton';
-import { LightDarkToggle } from '../LightDarkToggle/LightDarkToggle';
+import { LightDarkToggle } from '../lightDarkToggle/LightDarkToggle';
 
 import classes from './LandingPage.module.css';
 
