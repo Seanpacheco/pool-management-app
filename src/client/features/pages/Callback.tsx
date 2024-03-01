@@ -1,13 +1,11 @@
 import * as React from 'react';
 import { MainLayout } from '../../../client/components/Layout/MainLayout';
-import { Loader, Center } from '@mantine/core';
+import { PageLoadSpinner } from '../../components/pageLoadSpinner/pageLoadSpinner';
 
 export const Callback = () => {
   return (
     <MainLayout>
-      <Center>
-        <Loader size={'xl'} />
-      </Center>
+      <PageLoadSpinner />
     </MainLayout>
   );
 };

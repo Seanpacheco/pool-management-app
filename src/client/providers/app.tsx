@@ -5,7 +5,8 @@ import { MantineProvider, createTheme } from '@mantine/core';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Auth0ProviderWithNavigate } from './Auth0ProviderWithNavigate';
 
-import { Title, Text, Button, Container, Group, Loader } from '@mantine/core';
+import { Title, Text, Button, Container, Group } from '@mantine/core';
+import { PageLoadSpinner } from '../components/pageLoadSpinner';
 import classes from './ServerError.module.css';
 
 const theme = createTheme({
@@ -52,13 +53,7 @@ type AppProviderProps = {
 
 export const AppProvider = ({ children }: AppProviderProps) => {
   return (
-    <React.Suspense
-      fallback={
-        <div>
-          <Loader size={'xl'} />
-        </div>
-      }
-    >
+    <React.Suspense fallback={<PageLoadSpinner />}>
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <Router>
           <Auth0ProviderWithNavigate>

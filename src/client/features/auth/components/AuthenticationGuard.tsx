@@ -1,6 +1,6 @@
 import React, { ComponentType } from 'react';
 import { withAuthenticationRequired } from '@auth0/auth0-react';
-import { Loader } from '@mantine/core';
+import { PageLoadSpinner } from '../../../components/pageLoadSpinner';
 
 interface AuthenticationGuardProps {
   component: ComponentType;
@@ -8,11 +8,7 @@ interface AuthenticationGuardProps {
 
 export const AuthenticationGuard = ({ component }: AuthenticationGuardProps) => {
   const Component = withAuthenticationRequired(component, {
-    onRedirecting: () => (
-      <div>
-        <Loader size={'xl'} />
-      </div>
-    ),
+    onRedirecting: () => <PageLoadSpinner />,
     returnTo: '/dashboard',
   });
 

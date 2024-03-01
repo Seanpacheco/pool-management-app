@@ -14,7 +14,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
 
   return (
     <>
-      <Box pb={120}>
+      <Box pb={50}>
         <header className={classes.header}>
           <Group justify="space-between" h="100%">
             <h1 className={classes.logo}>Pool Manager</h1>
