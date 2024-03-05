@@ -24,3 +24,5 @@ dist-ssr
 *.sw?
 
 .env
+erd.pgerd
+erd.pgerd.png
