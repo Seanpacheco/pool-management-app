@@ -2191,6 +2191,11 @@ dom-helpers@^5.0.1:
     "@babel/runtime" "^7.8.7"
     csstype "^3.0.2"
 
+dotenv@^16.4.5:
+  version "16.4.5"
+  resolved "https://registry.npmjs.org/dotenv/-/dotenv-16.4.5.tgz"
+  integrity sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==
+
 ee-first@1.1.1:
   version "1.1.1"
   resolved "https://registry.npmjs.org/ee-first/-/ee-first-1.1.1.tgz"
@@ -2839,6 +2844,13 @@ execa@^5.1.1:
     onetime "^5.1.2"
     signal-exit "^3.0.3"
     strip-final-newline "^2.0.0"
+
+express-oauth2-jwt-bearer@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.npmjs.org/express-oauth2-jwt-bearer/-/express-oauth2-jwt-bearer-1.6.0.tgz"
+  integrity sha512-HXnez7vocYlOqlfF3ozPcf/WE3zxT7zfUNfeg5FHJnvNwhBYlNXiPOvuCtBalis8xcigvwtInzEKhBuH87+9ug==
+  dependencies:
+    jose "^4.13.1"
 
 express-openid-connect@^2.17.1:
   version "2.17.1"
@@ -3769,6 +3781,11 @@ jose@^2.0.5, jose@^2.0.6:
   integrity sha512-FVoPY7SflDodE4lknJmbAHSUjLCzE2H1F6MS0RYKMQ8SR+lNccpMf8R4eqkNYyyUjR5qZReOzZo5C5YiHOCjjg==
   dependencies:
     "@panva/asn1.js" "^1.0.0"
+
+jose@^4.13.1:
+  version "4.15.4"
+  resolved "https://registry.npmjs.org/jose/-/jose-4.15.4.tgz"
+  integrity sha512-W+oqK4H+r5sITxfxpSU+MMdr/YSWGvgZMQDIsNoBDGGy4i7GBPTtvFKibQzW06n3U3TqHjhvBJsirShsEJ6eeQ==
 
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
   version "4.0.0"
