@@ -1,11 +1,16 @@
-import express from 'express';
+import express, { Request } from 'express';
 import ViteExpress from 'vite-express';
 import { validateAccessToken } from './middleware/auth0.middleware';
 import dotenv from 'dotenv';
+import cors from 'cors';
+import morgan from 'morgan';
 
 dotenv.config();
 
 const app = express();
+
+app.use(morgan('dev'));
+app.use(cors<Request>());
 
 // app.use(
 //   auth({
