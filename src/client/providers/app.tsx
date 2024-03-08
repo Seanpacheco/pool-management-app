@@ -4,8 +4,11 @@ import '@mantine/core/styles.css';
 import { MantineProvider, createTheme } from '@mantine/core';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Auth0ProviderWithNavigate } from './Auth0ProviderWithNavigate';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import { Title, Text, Button, Container, Group } from '@mantine/core';
+import { Notifications } from '@mantine/notifications';
 import { PageLoadSpinner } from '../components/pageLoadSpinner';
 import classes from './ServerError.module.css';
 
@@ -47,6 +50,8 @@ const ErrorFallback = () => {
   );
 };
 
+const queryClient = new QueryClient();
+
 type AppProviderProps = {
   children: React.ReactNode;
 };
@@ -55,11 +60,17 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   return (
     <React.Suspense fallback={<PageLoadSpinner />}>
       <ErrorBoundary FallbackComponent={ErrorFallback}>
-        <Router>
-          <Auth0ProviderWithNavigate>
-            <MantineProvider theme={theme}>{children}</MantineProvider>
-          </Auth0ProviderWithNavigate>
-        </Router>
+        <QueryClientProvider client={queryClient}>
+          <Router>
+            <Auth0ProviderWithNavigate>
+              <MantineProvider theme={theme}>
+                <Notifications />
+                {children}
+              </MantineProvider>
+            </Auth0ProviderWithNavigate>
+          </Router>
+          <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
+        </QueryClientProvider>
       </ErrorBoundary>
     </React.Suspense>
   );
