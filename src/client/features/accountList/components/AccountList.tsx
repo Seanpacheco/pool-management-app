@@ -1,34 +1,11 @@
 import * as React from 'react';
-import { Stack, Avatar, Text, Accordion, Group, TextInput, Divider, rem, ActionIcon } from '@mantine/core';
+import { Avatar, Text, Accordion, Group, TextInput, Divider, rem, ActionIcon, Skeleton } from '@mantine/core';
 import { IconHome, IconSearch, IconPlus } from '@tabler/icons-react';
 import classes from './AccountList.module.css';
-
-const accounts = [
-  {
-    id: '1',
-    name: 'Alex Santos',
-    state: 'HI',
-    sites: 3,
-  },
-  {
-    id: '2',
-    name: 'Viva Wittman',
-    state: 'HI',
-    sites: 4,
-  },
-  {
-    id: '3',
-    name: 'Cliff Pacheco',
-    state: 'HI',
-    sites: 1,
-  },
-  {
-    id: '4',
-    name: 'Dywane Wade',
-    state: 'HI',
-    sites: 5,
-  },
-];
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { getAccounts } from '../api/getAccounts';
+import { Account } from '../types';
+import { useAuth0 } from '@auth0/auth0-react';
 
 interface AccordionLabelProps {
   name: string;
@@ -51,10 +28,36 @@ function AccordionLabel({ name, state }: AccordionLabelProps) {
     </Group>
   );
 }
-
+const skeletonList = [
+  { id: '1', name: 'Name', state: 'HI', sites: 0 },
+  { id: '2', name: 'Name', state: 'HI', sites: 0 },
+  { id: '3', name: 'Name', state: 'HI', sites: 0 },
+  { id: '4', name: 'Name', state: 'HI', sites: 0 },
+  { id: '5', name: 'Name', state: 'HI', sites: 0 },
+];
 export const AccountList = () => {
-  const items = accounts.map((item) => (
-    <Accordion.Item value={item.id} key={item.name}>
+  const auth = useAuth0();
+  const {
+    data: accounts,
+    error,
+    isLoading,
+    isSuccess,
+  } = useQuery({ queryKey: ['accounts', auth], queryFn: () => getAccounts(auth) });
+
+  const skeletonItems = skeletonList.map((item) => (
+    <Skeleton key={item.id}>
+      <Accordion.Item value={item.id}>
+        <Accordion.Control>
+          <AccordionLabel {...item} />
+        </Accordion.Control>
+        <Accordion.Panel>
+          <Text size="sm">{item.sites}</Text>
+        </Accordion.Panel>
+      </Accordion.Item>
+    </Skeleton>
+  ));
+  const accountItems = accounts?.data.map((item: Account) => (
+    <Accordion.Item key={item.id} value={item.id}>
       <Accordion.Control>
         <AccordionLabel {...item} />
       </Accordion.Control>
@@ -63,6 +66,10 @@ export const AccountList = () => {
       </Accordion.Panel>
     </Accordion.Item>
   ));
+  let items;
+  if (isLoading) items = skeletonItems;
+  if (isSuccess) items = accountItems;
+  if (error) return <div>An error occurred</div>;
 
   const icon = <IconSearch style={{ width: rem(16), height: rem(16) }} />;
 
