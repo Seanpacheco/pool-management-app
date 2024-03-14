@@ -25,6 +25,7 @@ app.get('/hello', (_, res) => {
 
 app.get('/api/v1/accounts', validateAccessToken, (req, res) => {
   console.log('getting accounts');
+  console.log(req.auth?.payload.sub);
   res.status(200).json({
     status: 'success',
     data: [
