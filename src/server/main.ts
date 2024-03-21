@@ -4,6 +4,7 @@ import { validateAccessToken } from './middleware/auth0.middleware';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import morgan from 'morgan';
+import { db } from './db/connection';
 
 dotenv.config();
 
@@ -25,7 +26,8 @@ app.get('/hello', (_, res) => {
 
 app.get('/api/v1/accounts', validateAccessToken, (req, res) => {
   console.log('getting accounts');
-  console.log(req.auth?.payload.sub);
+  console.log(req.auth?.payload);
+  db.users.findOrCreate(req.auth?.payload.sub);
   res.status(200).json({
     status: 'success',
     data: [
