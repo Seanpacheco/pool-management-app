@@ -1,0 +1,1 @@
+INSERT INTO app_user(user_id) VALUES($1) RETURNING user_id
