@@ -28,7 +28,6 @@ axios.interceptors.response.use(
       color: 'red',
       title: 'Error',
       message,
-      position: 'bottom-right',
     });
 
     return Promise.reject(error);
