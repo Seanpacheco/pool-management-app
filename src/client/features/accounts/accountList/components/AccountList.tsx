@@ -1,39 +1,41 @@
 import * as React from 'react';
-import { Avatar, Text, Accordion, Group, TextInput, Divider, rem, ActionIcon, Skeleton } from '@mantine/core';
-import { IconHome, IconSearch, IconPlus } from '@tabler/icons-react';
+import { Avatar, Text, Accordion, Group, TextInput, Divider, rem, Skeleton } from '@mantine/core';
+import { IconHome, IconSearch } from '@tabler/icons-react';
 import classes from './AccountList.module.css';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { getAccounts } from '../api/getAccounts';
 import { Account } from '../types';
 import { useAuth0 } from '@auth0/auth0-react';
+import { CreateAccountModal } from '../../createAccount/components/createAccountModal';
 
 interface AccordionLabelProps {
-  name: string;
-  state: string;
-  sites: number;
+  account_id: string;
+  account_name: string;
+  phone: string;
+  email: string;
 }
 
-function AccordionLabel({ name, state }: AccordionLabelProps) {
+function AccordionLabel({ account_name, email }: AccordionLabelProps) {
   return (
     <Group wrap="nowrap">
       <Avatar color="seaGreen" radius="xl" size="lg">
         <IconHome />
       </Avatar>
       <div>
-        <Text>{name}</Text>
+        <Text>{account_name}</Text>
         <Text size="sm" c="dimmed" fw={400}>
-          {state}
+          {email}
         </Text>
       </div>
     </Group>
   );
 }
 const skeletonList = [
-  { id: '1', name: 'Name', state: 'HI', sites: 0 },
-  { id: '2', name: 'Name', state: 'HI', sites: 0 },
-  { id: '3', name: 'Name', state: 'HI', sites: 0 },
-  { id: '4', name: 'Name', state: 'HI', sites: 0 },
-  { id: '5', name: 'Name', state: 'HI', sites: 0 },
+  { account_id: '2', account_name: 'Name', phone: '123456789', email: 'email' },
+  { account_id: '3', account_name: 'Name', phone: '123456789', email: 'email' },
+  { account_id: '1', account_name: 'Name', phone: '123456789', email: 'email' },
+  { account_id: '4', account_name: 'Name', phone: '123456789', email: 'email' },
+  { account_id: '5', account_name: 'Name', phone: '123456789', email: 'email' },
 ];
 export const AccountList = () => {
   const auth = useAuth0();
@@ -45,24 +47,24 @@ export const AccountList = () => {
   } = useQuery({ queryKey: ['accounts', auth], queryFn: () => getAccounts(auth) });
 
   const skeletonItems = skeletonList.map((item) => (
-    <Skeleton key={item.id}>
-      <Accordion.Item value={item.id}>
+    <Skeleton key={item.account_id}>
+      <Accordion.Item value={item.account_id}>
         <Accordion.Control>
           <AccordionLabel {...item} />
         </Accordion.Control>
         <Accordion.Panel>
-          <Text size="sm">{item.sites}</Text>
+          <Text size="sm">{item.phone}</Text>
         </Accordion.Panel>
       </Accordion.Item>
     </Skeleton>
   ));
   const accountItems = accounts?.data.map((item: Account) => (
-    <Accordion.Item key={item.id} value={item.id}>
+    <Accordion.Item key={item.account_id} value={item.account_id}>
       <Accordion.Control>
         <AccordionLabel {...item} />
       </Accordion.Control>
       <Accordion.Panel>
-        <Text size="sm">{item.sites}</Text>
+        <Text size="sm">{item.phone}</Text>
       </Accordion.Panel>
     </Accordion.Item>
   ));
@@ -77,14 +79,7 @@ export const AccountList = () => {
     <>
       <Group justify="flex-end" grow>
         <TextInput placeholder="Search" rightSection={icon} />
-        <ActionIcon
-          variant="gradient"
-          size="lg"
-          aria-label="Gradient action icon"
-          gradient={{ from: 'seaGreen.4', to: 'seaGreen.8', deg: 90 }}
-        >
-          <IconPlus />
-        </ActionIcon>
+        <CreateAccountModal />
       </Group>
       <Divider my="md" />
       <Accordion classNames={{ item: classes.item }} chevronPosition="right" variant="contained">

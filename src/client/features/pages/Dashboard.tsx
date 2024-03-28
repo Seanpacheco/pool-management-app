@@ -2,7 +2,7 @@ import * as React from 'react';
 import { MainLayout } from '../../../client/components/Layout/MainLayout';
 import { Affix, Container, Grid, SimpleGrid, Skeleton, rem, Paper } from '@mantine/core';
 import { LightDarkToggle } from '../lightDarkToggle/LightDarkToggle';
-import { AccountList } from '../accountList/components/AccountList';
+import { AccountList } from '../accounts/accountList/components/AccountList';
 import { DataDisplay } from '../dataDisplay/dataDisplay';
 
 const PRIMARY_COL_HEIGHT = rem(500);
