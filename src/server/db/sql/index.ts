@@ -6,6 +6,10 @@ export const users = {
   add: sql('users/add.sql'),
   create: sql('users/create.sql'),
 };
+export const accounts = {
+  find: sql('accounts/find.sql'),
+  add: sql('accounts/add.sql'),
+};
 
 // Helper for linking to external query files;
 function sql(file: string): QueryFile {
