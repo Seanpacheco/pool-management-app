@@ -20,6 +20,6 @@ export class AccountsRepository {
     });
   }
   find(user_id: string | Promise<AppUser>): Promise<Account[]> {
-    return db.one(sql.find, user_id);
+    return db.manyOrNone(sql.find, user_id);
   }
 }
