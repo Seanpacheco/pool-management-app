@@ -3,7 +3,7 @@ import { Avatar, Text, Accordion, Group, TextInput, Divider, rem, Skeleton } fro
 import { IconHome, IconSearch } from '@tabler/icons-react';
 import classes from './AccountList.module.css';
 import { useQuery } from '@tanstack/react-query';
-import { getAccounts } from '../api/getAccounts';
+import { getAccounts, useAccounts } from '../api/getAccounts';
 import { Account } from '../types';
 import { useAuth0 } from '@auth0/auth0-react';
 import { CreateAccountModal } from '../../createAccount/components/createAccountModal';
@@ -39,12 +39,11 @@ const skeletonList = [
 ];
 export const AccountList = () => {
   const auth = useAuth0();
-  const {
-    data: accounts,
-    error,
-    isLoading,
-    isSuccess,
-  } = useQuery({ queryKey: ['accounts', auth], queryFn: () => getAccounts(auth) });
+  const { accounts, error, isLoading, isSuccess } = useAccounts(auth);
+
+  // React.useEffect(() => {
+  //   if (isSuccess) setAccountData(accounts?.data);
+  // }, [accounts?.data, isSuccess]);
 
   const skeletonItems = skeletonList.map((item) => (
     <Skeleton key={item.account_id}>
@@ -58,7 +57,7 @@ export const AccountList = () => {
       </Accordion.Item>
     </Skeleton>
   ));
-  const accountItems = accounts?.data.map((item: Account) => (
+  const accountItems = accounts?.data?.map((item: Account) => (
     <Accordion.Item key={item.account_id} value={item.account_id}>
       <Accordion.Control>
         <AccordionLabel {...item} />
@@ -68,9 +67,13 @@ export const AccountList = () => {
       </Accordion.Panel>
     </Accordion.Item>
   ));
+
   let items;
   if (isLoading) items = skeletonItems;
-  if (isSuccess) items = accountItems;
+  if (isSuccess) {
+    items = accountItems;
+    console.log(accounts.data);
+  }
   if (error) return <div>An error occurred</div>;
 
   const icon = <IconSearch style={{ width: rem(16), height: rem(16) }} />;

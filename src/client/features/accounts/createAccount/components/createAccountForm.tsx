@@ -4,9 +4,11 @@ import { useForm } from '@mantine/form';
 import { IMaskInput } from 'react-imask';
 import { notifications } from '@mantine/notifications';
 import { useCreateAccount } from '../api/createAccount';
+import { useAuth0 } from '@auth0/auth0-react';
 
 export const CreateAccountForm = () => {
-  const createAccountMutation = useCreateAccount();
+  const auth = useAuth0();
+  const createAccountMutation = useCreateAccount({}, auth); // Pass the required arguments to the useCreateAccount function
   const form = useForm({
     initialValues: {
       accountName: '',
@@ -32,7 +34,18 @@ export const CreateAccountForm = () => {
     <Box maw={340} mx="auto">
       <form
         // method="POST"
-        onSubmit={form.onSubmit((values) => console.log(values), handleError)}
+        onSubmit={async (event) => {
+          event.preventDefault();
+          await createAccountMutation.mutateAsync({
+            data: {
+              account_name: form.values.accountName,
+              phone: form.values.phone,
+              email: form.values.email,
+            },
+            auth: auth,
+          });
+          handleError(form.errors);
+        }}
       >
         <TextInput
           withAsterisk
@@ -52,15 +65,16 @@ export const CreateAccountForm = () => {
         <Group justify="flex-end" mt="md">
           <Button
             type="submit"
-            onClick={async () => {
-              await createAccountMutation.mutateAsync({
-                data: {
-                  account_name: form.values.accountName,
-                  phone: form.values.phone,
-                  email: form.values.email,
-                },
-              });
-            }}
+            // onClick={async () => {
+            //   await createAccountMutation.mutateAsync({
+            //     data: {
+            //       account_name: form.values.accountName,
+            //       phone: form.values.phone,
+            //       email: form.values.email,
+            //     },
+            //     auth: auth,
+            //   });
+            // }}
           >
             Submit
           </Button>
