@@ -17,6 +17,6 @@ export const useAccounts = (auth: Auth0ContextInterface<User>) => {
     error,
     isLoading,
     isSuccess,
-  } = useQuery({ queryKey: ['accounts', auth], queryFn: async () => getAccounts(auth) });
+  } = useQuery({ queryKey: ['accounts', { auth }], queryFn: async () => getAccounts(auth) });
   return { accounts, error, isLoading, isSuccess };
 };
