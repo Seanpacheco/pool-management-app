@@ -5,6 +5,7 @@ import { IMaskInput } from 'react-imask';
 import { notifications } from '@mantine/notifications';
 import { useCreateAccount } from '../api/createAccount';
 import { useAuth0 } from '@auth0/auth0-react';
+import { PageLoadSpinner } from '../../../../components/pageLoadSpinner/PageLoadSpinner';
 
 export const CreateAccountForm = () => {
   const auth = useAuth0();
@@ -29,14 +30,17 @@ export const CreateAccountForm = () => {
       notifications.show({ message: 'Please provide a valid email', color: 'red' });
     }
   };
-
+  if (createAccountMutation.isPending) {
+    return <PageLoadSpinner />;
+  }
+  if (createAccountMutation.isSuccess) return <Button>Close</Button>;
   return (
     <Box maw={340} mx="auto">
       <form
         // method="POST"
-        onSubmit={async (event) => {
+        onSubmit={(event) => {
           event.preventDefault();
-          await createAccountMutation.mutateAsync({
+          createAccountMutation.mutate({
             data: {
               account_name: form.values.accountName,
               phone: form.values.phone,
