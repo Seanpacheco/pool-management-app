@@ -1,12 +1,25 @@
 import * as React from 'react';
-import { Avatar, Text, Accordion, Group, TextInput, Divider, rem, Skeleton } from '@mantine/core';
-import { IconHome, IconSearch } from '@tabler/icons-react';
+import {
+  Avatar,
+  Text,
+  Menu,
+  Accordion,
+  Group,
+  TextInput,
+  Divider,
+  rem,
+  Skeleton,
+  Center,
+  ActionIcon,
+  Button,
+} from '@mantine/core';
+import { IconHome, IconSearch, IconDots, IconSettings, IconTrash, IconPlus } from '@tabler/icons-react';
 import classes from './AccountList.module.css';
-import { useQuery } from '@tanstack/react-query';
-import { getAccounts } from '../api/getAccounts';
+import { getAccounts, useAccounts } from '../api/getAccounts';
 import { Account } from '../types';
 import { useAuth0 } from '@auth0/auth0-react';
 import { CreateAccountModal } from '../../createAccount/components/createAccountModal';
+import { modals } from '@mantine/modals';
 
 interface AccordionLabelProps {
   account_id: string;
@@ -14,6 +27,22 @@ interface AccordionLabelProps {
   phone: string;
   email: string;
 }
+// function DeleteConfirmationModal() {
+//   const openDeleteModal = () =>
+//     modals.openConfirmModal({
+//       title: 'Delete this account?',
+//       centered: true,
+//       children: (
+//         <Text size="sm">
+//           Are you sure you want to delete this account? This action is destructive and irreversible.
+//         </Text>
+//       ),
+//       labels: { confirm: 'Delete account', cancel: "No don't delete it" },
+//       confirmProps: { color: 'red' },
+//       onCancel: () => console.log('Cancel'),
+//       onConfirm: () => console.log('Confirmed'),
+//     });
+// }
 
 function AccordionLabel({ account_name, email }: AccordionLabelProps) {
   return (
@@ -39,52 +68,147 @@ const skeletonList = [
 ];
 export const AccountList = () => {
   const auth = useAuth0();
-  const {
-    data: accounts,
-    error,
-    isLoading,
-    isSuccess,
-  } = useQuery({ queryKey: ['accounts', auth], queryFn: () => getAccounts(auth) });
+  const { accounts, error, isLoading, isSuccess } = useAccounts(auth);
+  const [accountData, setAccountData] = React.useState<Account[] | null>([]);
+  React.useEffect(() => {
+    if (isSuccess) setAccountData(accounts?.data);
+  }, [accounts?.data, isSuccess]);
+  // React.useEffect(() => {
+  //   if (isSuccess) setAccountData(accounts?.data);
+  // }, [accounts?.data, isSuccess]);
 
-  const skeletonItems = skeletonList.map((item) => (
-    <Skeleton key={item.account_id}>
-      <Accordion.Item value={item.account_id}>
-        <Accordion.Control>
-          <AccordionLabel {...item} />
-        </Accordion.Control>
-        <Accordion.Panel>
-          <Text size="sm">{item.phone}</Text>
-        </Accordion.Panel>
-      </Accordion.Item>
-    </Skeleton>
-  ));
-  const accountItems = accounts?.data.map((item: Account) => (
-    <Accordion.Item key={item.account_id} value={item.account_id}>
-      <Accordion.Control>
-        <AccordionLabel {...item} />
-      </Accordion.Control>
-      <Accordion.Panel>
-        <Text size="sm">{item.phone}</Text>
-      </Accordion.Panel>
-    </Accordion.Item>
-  ));
-  let items;
-  if (isLoading) items = skeletonItems;
-  if (isSuccess) items = accountItems;
+  // const skeletonItems = skeletonList.map((item) => (
+  //   <Skeleton key={item.account_id}>
+  //     <Accordion.Item value={item.account_id}>
+  //       <Accordion.Control>
+  //         <AccordionLabel {...item} />
+  //       </Accordion.Control>
+  //       <Accordion.Panel>
+  //         <Text size="sm">{item.phone}</Text>
+  //       </Accordion.Panel>
+  //     </Accordion.Item>
+  //   </Skeleton>
+  // ));
+  // const accountItems = accounts?.data?.map((item: Account) => (
+  //   <Accordion.Item key={item.account_id} value={item.account_id}>
+  //     <Accordion.Control>
+  //       <AccordionLabel {...item} />
+  //     </Accordion.Control>
+  //     <Accordion.Panel>
+  //       <Text size="sm">{item.phone}</Text>
+  //     </Accordion.Panel>
+  //   </Accordion.Item>
+  // ));
+  const icon = <IconSearch style={{ width: rem(16), height: rem(16) }} />;
+  const openDeleteModal = () =>
+    modals.openConfirmModal({
+      title: 'Delete this account?',
+      centered: true,
+      children: (
+        <Text size="sm">
+          Are you sure you want to delete this account? This action is destructive and irreversible.
+        </Text>
+      ),
+      labels: { confirm: 'Delete account', cancel: "No don't delete it" },
+      confirmProps: { color: 'red' },
+      onCancel: () => console.log('Cancel'),
+      onConfirm: () => console.log('Confirmed'),
+    });
+  // let items;
+  if (isLoading)
+    return (
+      <>
+        <Group justify="flex-end" grow>
+          <TextInput placeholder="Search" rightSection={icon} />
+          <CreateAccountModal />
+        </Group>
+        <Divider my="md" />
+        <Accordion classNames={{ item: classes.item }} chevronPosition="right" variant="contained">
+          {skeletonList.map((item) => (
+            <Skeleton key={item.account_id}>
+              <Accordion.Item value={item.account_id}>
+                <Accordion.Control>
+                  <AccordionLabel {...item} />
+                </Accordion.Control>
+                <Accordion.Panel>
+                  <Text size="sm">{item.phone}</Text>
+                </Accordion.Panel>
+              </Accordion.Item>
+            </Skeleton>
+          ))}
+        </Accordion>
+      </>
+    );
+  // items = skeletonItems;
+  if (isSuccess)
+    return (
+      <>
+        <Group justify="flex-end" grow>
+          <TextInput placeholder="Search" rightSection={icon} />
+          <CreateAccountModal />
+        </Group>
+        <Divider my="md" />
+        <Accordion classNames={{ item: classes.item }} chevronPosition="left" variant="contained">
+          {accountData?.map((item: Account) => (
+            <Accordion.Item key={item.account_id} value={item.account_id}>
+              <Center>
+                <Accordion.Control>
+                  <AccordionLabel {...item} />
+                </Accordion.Control>{' '}
+                <Menu shadow="md" width={200}>
+                  <Menu.Target>
+                    <ActionIcon className={classes.menuIcon} variant="subtle" size="lg">
+                      <IconDots size="1.5rem" />
+                    </ActionIcon>
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    <Menu.Label>Options</Menu.Label>
+                    <Menu.Item leftSection={<IconPlus style={{ width: rem(14), height: rem(14) }} />}>
+                      Add Site
+                    </Menu.Item>
+                    <Menu.Item leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}>
+                      Settings
+                    </Menu.Item>
+
+                    <Menu.Divider />
+
+                    <Menu.Label>Danger zone</Menu.Label>
+
+                    <Menu.Item
+                      onClick={openDeleteModal}
+                      color="red"
+                      leftSection={<IconTrash style={{ width: rem(14), height: rem(14) }} />}
+                    >
+                      Delete Client Account
+                    </Menu.Item>
+                  </Menu.Dropdown>
+                </Menu>
+              </Center>
+              <Accordion.Panel>
+                <Text size="sm">{item.phone}</Text>
+              </Accordion.Panel>
+            </Accordion.Item>
+          ))}
+        </Accordion>
+      </>
+    );
+  // items = accountItems;
+  console.log(accounts.data);
+
   if (error) return <div>An error occurred</div>;
 
-  const icon = <IconSearch style={{ width: rem(16), height: rem(16) }} />;
+  // const icon = <IconSearch style={{ width: rem(16), height: rem(16) }} />;
 
-  return (
-    <>
-      <Group justify="flex-end" grow>
-        <TextInput placeholder="Search" rightSection={icon} />
-        <CreateAccountModal />
-      </Group>
-      <Divider my="md" />
-      <Accordion classNames={{ item: classes.item }} chevronPosition="right" variant="contained">
-        {items}
-      </Accordion>
-    </>
-  );
+  // return (
+  //   <>
+  //     <Group justify="flex-end" grow>
+  //       <TextInput placeholder="Search" rightSection={icon} />
+  //       <CreateAccountModal />
+  //     </Group>
+  //     <Divider my="md" />
+  //     <Accordion classNames={{ item: classes.item }} chevronPosition="right" variant="contained">
+  //       {items}
+  //     </Accordion>
+  //   </>
+  // );
 };

@@ -3,47 +3,64 @@ import { axios } from '../../../../lib/axios';
 import { queryClient, MutationConfig } from '../../../../lib/react-query';
 import { notifications } from '@mantine/notifications';
 import { Auth0ContextInterface, User } from '@auth0/auth0-react';
+import { getAccounts } from '../../accountList/api/getAccounts';
+import useAuth0 from '@auth0/auth0-react';
 
 import Account from '../../../../types/Account';
 
-//Data Transfer Object
+// Data Transfer Object
 export type CreateAccountDTO = {
-  data: {
-    account_name: string;
-    phone: string;
-    email: string;
-  };
+  account_name: string;
+  phone: string;
+  email: string;
 };
 
-export const createAccount = async ({ data }: CreateAccountDTO) => {
-  return axios.post('/api/v1/accounts', data);
+export const createAccount = async ({ data }: { data: CreateAccountDTO }, auth: Auth0ContextInterface<User>) => {
+  const token = await auth.getAccessTokenSilently();
+  const response = await axios.post('/api/v1/accounts', data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response;
 };
 
 type UseCreateAccountOptions = {
   config?: MutationConfig<typeof createAccount>;
 };
 
-export const useCreateAccount = ({ config }: UseCreateAccountOptions = {}) => {
+export const useCreateAccount = ({ config }: UseCreateAccountOptions = {}, auth: Auth0ContextInterface<User>) => {
   return useMutation({
     onMutate: async (newAccount) => {
-      await queryClient.cancelQueries({ queryKey: ['accounts'] });
+      await queryClient.cancelQueries({ queryKey: ['accounts', { auth }] });
 
-      const previousAccounts = queryClient.getQueryData<Account[]>(['accounts']);
+      const previousAccounts = queryClient.getQueryData<Account[]>(['accounts', { auth }]);
 
-      queryClient.setQueryData(['accounts'], [...(previousAccounts || []), newAccount]);
+      queryClient.setQueryData(['accounts', { auth }], [previousAccounts || [], newAccount.data]);
+      console.log(newAccount.data);
 
       return { previousAccounts };
     },
     onError: (_, __, context: any) => {
       if (context?.previousAccounts) {
-        queryClient.setQueriesData({ queryKey: ['accounts'] }, context.previousAccounts);
+        queryClient.setQueriesData({ queryKey: ['accounts', { auth }] }, context.previousAccounts);
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['accounts'] });
-      notifications.show({ message: 'Account created', color: 'green' });
+      console.log('mutate success');
+
+      try {
+        queryClient.invalidateQueries({ queryKey: ['accounts'] });
+        notifications.show({ message: 'Account created', color: 'green' });
+        console.log('mutate success 2');
+      } catch (e) {
+        console.log(e);
+      }
     },
+    mutationKey: ['createAccount'],
     ...config,
-    mutationFn: (data) => createAccount(data),
+    mutationFn: async ({ data, auth }: { data: CreateAccountDTO; auth: Auth0ContextInterface<User> }) =>
+      createAccount({ data }, auth),
+    //   mutationFn: ({ data, auth }: { data: any; auth: Auth0ContextInterface<User> }) => createAccount(data, auth),
   });
 };
