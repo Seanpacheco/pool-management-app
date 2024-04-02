@@ -2,10 +2,12 @@ import * as React from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import '@mantine/core/styles.css';
 import { MantineProvider, createTheme } from '@mantine/core';
+import { ModalsProvider } from '@mantine/modals';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Auth0ProviderWithNavigate } from './Auth0ProviderWithNavigate';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { queryClient } from '../lib/react-query';
 
 import { Title, Text, Button, Container, Group } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
@@ -50,8 +52,6 @@ const ErrorFallback = () => {
   );
 };
 
-const queryClient = new QueryClient();
-
 type AppProviderProps = {
   children: React.ReactNode;
 };
@@ -64,8 +64,10 @@ export const AppProvider = ({ children }: AppProviderProps) => {
           <Router>
             <Auth0ProviderWithNavigate>
               <MantineProvider theme={theme}>
-                <Notifications position="bottom-right" />
-                {children}
+                <ModalsProvider>
+                  <Notifications position="bottom-right" />
+                  {children}
+                </ModalsProvider>
               </MantineProvider>
             </Auth0ProviderWithNavigate>
           </Router>

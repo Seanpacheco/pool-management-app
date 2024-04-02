@@ -4,9 +4,12 @@ import { useForm } from '@mantine/form';
 import { IMaskInput } from 'react-imask';
 import { notifications } from '@mantine/notifications';
 import { useCreateAccount } from '../api/createAccount';
+import { useAuth0 } from '@auth0/auth0-react';
+import { PageLoadSpinner } from '../../../../components/pageLoadSpinner/PageLoadSpinner';
 
 export const CreateAccountForm = () => {
-  const createAccountMutation = useCreateAccount();
+  const auth = useAuth0();
+  const createAccountMutation = useCreateAccount({}, auth); // Pass the required arguments to the useCreateAccount function
   const form = useForm({
     initialValues: {
       accountName: '',
@@ -27,12 +30,26 @@ export const CreateAccountForm = () => {
       notifications.show({ message: 'Please provide a valid email', color: 'red' });
     }
   };
-
+  if (createAccountMutation.isPending) {
+    return <PageLoadSpinner />;
+  }
+  if (createAccountMutation.isSuccess) return <Button>Close</Button>;
   return (
     <Box maw={340} mx="auto">
       <form
         // method="POST"
-        onSubmit={form.onSubmit((values) => console.log(values), handleError)}
+        onSubmit={(event) => {
+          event.preventDefault();
+          createAccountMutation.mutate({
+            data: {
+              account_name: form.values.accountName,
+              phone: form.values.phone,
+              email: form.values.email,
+            },
+            auth: auth,
+          });
+          handleError(form.errors);
+        }}
       >
         <TextInput
           withAsterisk
@@ -52,15 +69,16 @@ export const CreateAccountForm = () => {
         <Group justify="flex-end" mt="md">
           <Button
             type="submit"
-            onClick={async () => {
-              await createAccountMutation.mutateAsync({
-                data: {
-                  account_name: form.values.accountName,
-                  phone: form.values.phone,
-                  email: form.values.email,
-                },
-              });
-            }}
+            // onClick={async () => {
+            //   await createAccountMutation.mutateAsync({
+            //     data: {
+            //       account_name: form.values.accountName,
+            //       phone: form.values.phone,
+            //       email: form.values.email,
+            //     },
+            //     auth: auth,
+            //   });
+            // }}
           >
             Submit
           </Button>
