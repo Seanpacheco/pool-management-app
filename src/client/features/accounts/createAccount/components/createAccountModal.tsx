@@ -9,7 +9,7 @@ export const CreateAccountModal = () => {
 
   return (
     <>
-      <Modal opened={opened} onClose={close} withCloseButton={false} title="Add Account" centered>
+      <Modal opened={opened} onClose={close} withCloseButton={true} title="Add Account" centered>
         <CreateAccountForm />
       </Modal>
 

@@ -3,6 +3,8 @@ import { axios } from '../../../../lib/axios';
 import { queryClient, MutationConfig } from '../../../../lib/react-query';
 import { notifications } from '@mantine/notifications';
 import { Auth0ContextInterface, User } from '@auth0/auth0-react';
+import { getAccounts } from '../../accountList/api/getAccounts';
+import useAuth0 from '@auth0/auth0-react';
 
 import Account from '../../../../types/Account';
 
@@ -30,24 +32,30 @@ type UseCreateAccountOptions = {
 export const useCreateAccount = ({ config }: UseCreateAccountOptions = {}, auth: Auth0ContextInterface<User>) => {
   return useMutation({
     onMutate: async (newAccount) => {
-      await queryClient.cancelQueries({ queryKey: ['accounts', auth] });
+      await queryClient.cancelQueries({ queryKey: ['accounts', { auth }] });
 
-      const previousAccounts = queryClient.getQueryData<Account[]>(['accounts', auth]);
+      const previousAccounts = queryClient.getQueryData<Account[]>(['accounts', { auth }]);
 
-      queryClient.setQueryData(['accounts', auth], [...(previousAccounts || []), newAccount.data]);
+      queryClient.setQueryData(['accounts', { auth }], [previousAccounts || [], newAccount.data]);
       console.log(newAccount.data);
 
       return { previousAccounts };
     },
     onError: (_, __, context: any) => {
       if (context?.previousAccounts) {
-        queryClient.setQueriesData({ queryKey: ['accounts', auth] }, context.previousAccounts);
+        queryClient.setQueriesData({ queryKey: ['accounts', { auth }] }, context.previousAccounts);
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['accounts', auth] });
-      // queryClient.setQueryData(['accounts', auth], data);
-      notifications.show({ message: 'Account created', color: 'green' });
+      console.log('mutate success');
+
+      try {
+        queryClient.invalidateQueries({ queryKey: ['accounts'] });
+        notifications.show({ message: 'Account created', color: 'green' });
+        console.log('mutate success 2');
+      } catch (e) {
+        console.log(e);
+      }
     },
     mutationKey: ['createAccount'],
     ...config,

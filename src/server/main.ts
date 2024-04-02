@@ -45,6 +45,8 @@ app.post('/api/v1/accounts', validateAccessToken, async (req, res) => {
   }
 });
 
+// app.delete('/api/v1/accounts/:id', validateAccessToken, async (req, res) => {});
+
 app.get('/api/v1/accounts', validateAccessToken, async (req, res) => {
   console.log('getting accounts');
   // console.log(req.auth?.payload);
