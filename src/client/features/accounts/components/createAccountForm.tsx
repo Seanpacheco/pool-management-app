@@ -5,7 +5,7 @@ import { IMaskInput } from 'react-imask';
 import { notifications } from '@mantine/notifications';
 import { useCreateAccount } from '../api/createAccount';
 import { useAuth0 } from '@auth0/auth0-react';
-import { PageLoadSpinner } from '../../../../components/pageLoadSpinner/PageLoadSpinner';
+import { PageLoadSpinner } from '../../../components/pageLoadSpinner/PageLoadSpinner';
 
 export const CreateAccountForm = () => {
   const auth = useAuth0();

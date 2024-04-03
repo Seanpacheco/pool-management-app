@@ -18,7 +18,7 @@ import classes from './AccountList.module.css';
 import { getAccounts, useAccounts } from '../api/getAccounts';
 import { Account } from '../types';
 import { useAuth0 } from '@auth0/auth0-react';
-import { CreateAccountModal } from '../../createAccount/components/createAccountModal';
+import { CreateAccountModal } from './createAccountModal';
 import { modals } from '@mantine/modals';
 
 interface AccordionLabelProps {

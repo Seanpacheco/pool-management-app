@@ -1,12 +1,12 @@
 import { useMutation } from '@tanstack/react-query';
-import { axios } from '../../../../lib/axios';
-import { queryClient, MutationConfig } from '../../../../lib/react-query';
+import { axios } from '../../../lib/axios';
+import { queryClient, MutationConfig } from '../../../lib/react-query';
 import { notifications } from '@mantine/notifications';
 import { Auth0ContextInterface, User } from '@auth0/auth0-react';
-import { getAccounts } from '../../accountList/api/getAccounts';
+import { getAccounts } from './getAccounts';
 import useAuth0 from '@auth0/auth0-react';
 
-import Account from '../../../../types/Account';
+import Account from '../../../types/Account';
 
 // Data Transfer Object
 export type CreateAccountDTO = {
