@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { TextInput, Button, Group, Box, Input } from '@mantine/core';
+import { TextInput, Button, Group, Box, Input, Text, Center } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { IMaskInput } from 'react-imask';
 import { notifications } from '@mantine/notifications';
 import { useCreateAccount } from '../api/createAccount';
 import { useAuth0 } from '@auth0/auth0-react';
-import { PageLoadSpinner } from '../../../../components/pageLoadSpinner/PageLoadSpinner';
+import { PageLoadSpinner } from '../../../components/pageLoadSpinner/PageLoadSpinner';
 
 export const CreateAccountForm = () => {
   const auth = useAuth0();
@@ -33,14 +33,19 @@ export const CreateAccountForm = () => {
   if (createAccountMutation.isPending) {
     return <PageLoadSpinner />;
   }
-  if (createAccountMutation.isSuccess) return <Button>Close</Button>;
+  if (createAccountMutation.isSuccess)
+    return (
+      <Center>
+        <Text size="lg">Account Created Successfully</Text>
+      </Center>
+    );
   return (
     <Box maw={340} mx="auto">
       <form
         // method="POST"
         onSubmit={(event) => {
           event.preventDefault();
-          createAccountMutation.mutate({
+          createAccountMutation.mutateAsync({
             data: {
               account_name: form.values.accountName,
               phone: form.values.phone,

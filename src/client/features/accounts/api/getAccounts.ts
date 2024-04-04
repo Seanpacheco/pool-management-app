@@ -1,5 +1,5 @@
 import { Auth0ContextInterface, User } from '@auth0/auth0-react';
-import { axios } from '../../../../lib/axios';
+import { axios } from '../../../lib/axios';
 import { useQuery } from '@tanstack/react-query';
 
 export const getAccounts = async (auth: Auth0ContextInterface<User>) => {

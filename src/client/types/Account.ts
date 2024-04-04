@@ -23,7 +23,9 @@ export default interface Account {
 
   updated_at: Date;
 }
-
+export interface ServerAccountResponse {
+  data: Account[];
+}
 /** Represents the initializer for the table public.account */
 export interface AccountInitializer {
   /** Default value: gen_random_uuid() */
