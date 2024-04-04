@@ -15,10 +15,12 @@ import {
 import { IconHome, IconSearch, IconDots, IconSettings, IconTrash, IconPlus } from '@tabler/icons-react';
 import classes from './AccountList.module.css';
 import { useAccounts } from '../api/getAccounts';
+import { useDeleteAccount } from '../api/deleteAccount';
 import { Account } from '../types';
 import { useAuth0 } from '@auth0/auth0-react';
 import { CreateAccountModal } from './createAccountModal';
 import { modals } from '@mantine/modals';
+import { account } from '@/client/types/Account';
 
 interface AccordionLabelProps {
   account_id: string;
@@ -78,6 +80,8 @@ export const AccountList = () => {
   React.useEffect(() => {
     if (isSuccess) setAccountData(accounts?.data);
   }, [accounts?.data, isSuccess]);
+
+  const deleteAccountMutation = useDeleteAccount({}, auth);
   // React.useEffect(() => {
   //   if (isSuccess) setAccountData(accounts?.data);
   // }, [accounts?.data, isSuccess]);
@@ -105,7 +109,7 @@ export const AccountList = () => {
   //   </Accordion.Item>
   // ));
   const icon = <IconSearch style={{ width: rem(16), height: rem(16) }} />;
-  const openDeleteModal = () =>
+  const openDeleteModal = (accountId: string) =>
     modals.openConfirmModal({
       title: 'Delete this account?',
       centered: true,
@@ -117,7 +121,11 @@ export const AccountList = () => {
       labels: { confirm: 'Delete account', cancel: "No don't delete it" },
       confirmProps: { color: 'red' },
       onCancel: () => console.log('Cancel'),
-      onConfirm: () => console.log('Confirmed'),
+      onConfirm: () =>
+        deleteAccountMutation.mutateAsync({
+          account_id: accountId,
+          auth: auth,
+        }),
     });
   // let items;
   if (isLoading)
@@ -184,7 +192,9 @@ export const AccountList = () => {
                     <Menu.Label>Danger zone</Menu.Label>
 
                     <Menu.Item
-                      onClick={openDeleteModal}
+                      onClick={() => {
+                        openDeleteModal(item.account_id);
+                      }}
                       color="red"
                       leftSection={<IconTrash style={{ width: rem(14), height: rem(14) }} />}
                     >

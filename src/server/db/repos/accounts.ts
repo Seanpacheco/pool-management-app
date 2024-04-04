@@ -1,4 +1,5 @@
 import { IDatabase, IMain } from 'pg-promise';
+import { IResult } from 'pg-promise/typescript/pg-subset';
 import { accounts as sql } from '../sql';
 import { db } from '../connection';
 import Account from '../schemas/public/Account';
@@ -21,5 +22,8 @@ export class AccountsRepository {
   }
   find(user_id: string | Promise<AppUser>): Promise<Account[]> {
     return db.manyOrNone(sql.find, user_id);
+  }
+  remove(account_id: string): Promise<number> {
+    return db.result(sql.remove, account_id, (r: IResult) => r.rowCount);
   }
 }

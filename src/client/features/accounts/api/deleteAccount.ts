@@ -4,7 +4,7 @@ import { queryClient, MutationConfig } from '../../../lib/react-query';
 import { notifications } from '@mantine/notifications';
 import { Auth0ContextInterface, User } from '@auth0/auth0-react';
 
-import Account from '../../../types/Account';
+import { ServerAccountResponse } from '../../../types/Account';
 
 export const deleteAccount = async ({ account_id }: { account_id: string }, auth: Auth0ContextInterface<User>) => {
   const token = await auth.getAccessTokenSilently();
@@ -13,6 +13,7 @@ export const deleteAccount = async ({ account_id }: { account_id: string }, auth
       Authorization: `Bearer ${token}`,
     },
   });
+  console.log(response);
   return response;
 };
 
@@ -22,27 +23,32 @@ type UseDeleteAccountOptions = {
 
 export const useDeleteAccount = ({ config }: UseDeleteAccountOptions, auth: Auth0ContextInterface<User>) => {
   return useMutation({
-    onMutate: async (deletedAccount) => {
+    onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: ['accounts', { auth }] });
 
-      const previousAccounts = queryClient.getQueryData<Account[]>(['accounts', { auth }]);
+      const previousAccounts = queryClient.getQueryData<ServerAccountResponse>(['accounts', { auth }]);
 
-      queryClient.setQueryData(
-        ['accounts', { auth }],
-        previousAccounts?.filter((account) => account.account_id !== deletedAccount.account_id),
-      );
-
+      // queryClient.setQueryData(
+      //   ['accounts', { auth }],
+      //   previousAccounts?.data.filter((account) => account.account_id !== deletedAccount.account_id),
+      // );
+      console.log('onMutate success');
       return { previousAccounts };
     },
     onError: (_, __, context: any) => {
-      if (context?.previousComments) {
+      if (context?.previousAccounts) {
         queryClient.setQueryData(['accounts', { auth }], context.previousAccounts);
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['accounts'] });
-      notifications.show({ message: 'Account created', color: 'green' });
+      try {
+        queryClient.invalidateQueries({ queryKey: ['accounts', { auth }] });
+        notifications.show({ message: 'Account Deleted Successfully', color: 'green' });
+      } catch (e) {
+        console.log(e);
+      }
     },
+    mutationKey: ['deleteAccount'],
     ...config,
     mutationFn: async ({ account_id, auth }: { account_id: string; auth: Auth0ContextInterface }) =>
       deleteAccount({ account_id }, auth),

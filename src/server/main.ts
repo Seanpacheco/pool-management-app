@@ -45,7 +45,16 @@ app.post('/api/v1/accounts', validateAccessToken, async (req, res) => {
   }
 });
 
-// app.delete('/api/v1/accounts/:id', validateAccessToken, async (req, res) => {});
+app.delete('/api/v1/accounts/:id', validateAccessToken, async (req, res) => {
+  try {
+    const data = await db.accounts.remove(req.params.id);
+    console.log('account removed');
+    console.log(data);
+    res.sendStatus(204);
+  } catch (e) {
+    console.log(e);
+  }
+});
 
 app.get('/api/v1/accounts', validateAccessToken, async (req, res) => {
   console.log('getting accounts');
