@@ -11,11 +11,10 @@ import {
   Skeleton,
   Center,
   ActionIcon,
-  Button,
 } from '@mantine/core';
 import { IconHome, IconSearch, IconDots, IconSettings, IconTrash, IconPlus } from '@tabler/icons-react';
 import classes from './AccountList.module.css';
-import { getAccounts, useAccounts } from '../api/getAccounts';
+import { useAccounts } from '../api/getAccounts';
 import { Account } from '../types';
 import { useAuth0 } from '@auth0/auth0-react';
 import { CreateAccountModal } from './createAccountModal';
@@ -70,6 +69,12 @@ export const AccountList = () => {
   const auth = useAuth0();
   const { accounts, error, isLoading, isSuccess } = useAccounts(auth);
   const [accountData, setAccountData] = React.useState<Account[] | null>([]);
+  const [selectedAccountId, setSelectedAccountId] = React.useState<string>('');
+
+  function handleAccountSelection(account_id: string) {
+    setSelectedAccountId(account_id);
+  }
+
   React.useEffect(() => {
     if (isSuccess) setAccountData(accounts?.data);
   }, [accounts?.data, isSuccess]);
@@ -152,7 +157,11 @@ export const AccountList = () => {
           {accountData?.map((item: Account) => (
             <Accordion.Item key={item.account_id} value={item.account_id}>
               <Center>
-                <Accordion.Control>
+                <Accordion.Control
+                  onClick={() => {
+                    handleAccountSelection(item.account_id);
+                  }}
+                >
                   <AccordionLabel {...item} />
                 </Accordion.Control>{' '}
                 <Menu shadow="md" width={200}>
