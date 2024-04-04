@@ -9,6 +9,7 @@ export const users = {
 export const accounts = {
   find: sql('accounts/find.sql'),
   add: sql('accounts/add.sql'),
+  remove: sql('accounts/remove.sql'),
 };
 
 // Helper for linking to external query files;

@@ -11,15 +11,16 @@ import {
   Skeleton,
   Center,
   ActionIcon,
-  Button,
 } from '@mantine/core';
 import { IconHome, IconSearch, IconDots, IconSettings, IconTrash, IconPlus } from '@tabler/icons-react';
 import classes from './AccountList.module.css';
-import { getAccounts, useAccounts } from '../api/getAccounts';
+import { useAccounts } from '../api/getAccounts';
+import { useDeleteAccount } from '../api/deleteAccount';
 import { Account } from '../types';
 import { useAuth0 } from '@auth0/auth0-react';
-import { CreateAccountModal } from '../../createAccount/components/createAccountModal';
+import { CreateAccountModal } from './createAccountModal';
 import { modals } from '@mantine/modals';
+import { account } from '@/client/types/Account';
 
 interface AccordionLabelProps {
   account_id: string;
@@ -70,9 +71,17 @@ export const AccountList = () => {
   const auth = useAuth0();
   const { accounts, error, isLoading, isSuccess } = useAccounts(auth);
   const [accountData, setAccountData] = React.useState<Account[] | null>([]);
+  const [selectedAccountId, setSelectedAccountId] = React.useState<string>('');
+
+  function handleAccountSelection(account_id: string) {
+    setSelectedAccountId(account_id);
+  }
+
   React.useEffect(() => {
     if (isSuccess) setAccountData(accounts?.data);
   }, [accounts?.data, isSuccess]);
+
+  const deleteAccountMutation = useDeleteAccount({}, auth);
   // React.useEffect(() => {
   //   if (isSuccess) setAccountData(accounts?.data);
   // }, [accounts?.data, isSuccess]);
@@ -100,7 +109,7 @@ export const AccountList = () => {
   //   </Accordion.Item>
   // ));
   const icon = <IconSearch style={{ width: rem(16), height: rem(16) }} />;
-  const openDeleteModal = () =>
+  const openDeleteModal = (accountId: string) =>
     modals.openConfirmModal({
       title: 'Delete this account?',
       centered: true,
@@ -112,7 +121,11 @@ export const AccountList = () => {
       labels: { confirm: 'Delete account', cancel: "No don't delete it" },
       confirmProps: { color: 'red' },
       onCancel: () => console.log('Cancel'),
-      onConfirm: () => console.log('Confirmed'),
+      onConfirm: () =>
+        deleteAccountMutation.mutateAsync({
+          account_id: accountId,
+          auth: auth,
+        }),
     });
   // let items;
   if (isLoading)
@@ -152,7 +165,11 @@ export const AccountList = () => {
           {accountData?.map((item: Account) => (
             <Accordion.Item key={item.account_id} value={item.account_id}>
               <Center>
-                <Accordion.Control>
+                <Accordion.Control
+                  onClick={() => {
+                    handleAccountSelection(item.account_id);
+                  }}
+                >
                   <AccordionLabel {...item} />
                 </Accordion.Control>{' '}
                 <Menu shadow="md" width={200}>
@@ -175,7 +192,9 @@ export const AccountList = () => {
                     <Menu.Label>Danger zone</Menu.Label>
 
                     <Menu.Item
-                      onClick={openDeleteModal}
+                      onClick={() => {
+                        openDeleteModal(item.account_id);
+                      }}
                       color="red"
                       leftSection={<IconTrash style={{ width: rem(14), height: rem(14) }} />}
                     >
