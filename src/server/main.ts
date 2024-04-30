@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import morgan from 'morgan';
 import { db } from './db/connection';
-import { account } from '@/client/types/Account';
+import { accountInitializer, accountMutator } from './db/schemas/public/Account';
 
 dotenv.config();
 
@@ -16,13 +16,6 @@ app.use(express.json());
 app.use(morgan('dev'));
 app.use(cors<Request>());
 
-// app.use(
-//   auth({
-//     issuerBaseURL: domain,
-//     audience: audience,
-//   }),
-// );
-
 app.get('/hello', (_, res) => {
   res.send('Hello Vite + React + TypeScript!');
 });
@@ -30,45 +23,72 @@ app.get('/hello', (_, res) => {
 app.post('/api/v1/accounts', validateAccessToken, async (req, res) => {
   console.log('adding account');
   console.log(req.body.account_name);
-  try {
-    const data = await db.accounts.add({
-      user_id: req.auth?.payload.sub,
-      account_name: req.body.account_name,
-      email: req.body.email,
-      phone: req.body.phone,
-    });
-    res.status(200).json({ data: data, status: 'Account added and response sent successfully!' });
-    console.log(data);
-    console.log('account added');
-  } catch (e) {
-    console.log(e);
+  const result = accountInitializer.safeParse({
+    user_id: req.auth?.payload.sub,
+    account_name: req.body.account_name,
+    email: req.body.email,
+    phone: req.body.phone,
+  });
+  if (result.success) {
+    try {
+      const data = await db.accounts.add({
+        user_id: req.auth?.payload.sub,
+        account_name: req.body.account_name,
+        email: req.body.email,
+        phone: req.body.phone,
+      });
+      res.status(200).json({ data: data, status: 'Account added and response sent successfully!' });
+      console.log(data);
+      console.log('account added');
+    } catch (e) {
+      console.log(e);
+    }
+  } else {
+    res.status(400).json(result.error.formErrors.fieldErrors);
+    console.log(result.error.formErrors.fieldErrors);
   }
 });
 
 app.delete('/api/v1/accounts/:id', validateAccessToken, async (req, res) => {
-  try {
-    const data = await db.accounts.remove(req.params.id);
-    console.log('account removed');
-    console.log(data);
-    res.sendStatus(204);
-  } catch (e) {
-    console.log(e);
+  const result = accountMutator.safeParse({
+    user_id: req.auth?.payload.sub,
+    account_id: req.params.id,
+  });
+  if (result.success) {
+    try {
+      const data = await db.accounts.remove(req.params.id);
+      console.log('account removed');
+      console.log(data);
+      res.sendStatus(204);
+    } catch (e) {
+      console.log(e);
+    }
+  } else {
+    res.status(400).json(result.error.formErrors.fieldErrors);
+    console.log(result.error.formErrors.fieldErrors);
   }
 });
 
 app.get('/api/v1/accounts', validateAccessToken, async (req, res) => {
   console.log('getting accounts');
-  // console.log(req.auth?.payload);
-  try {
-    const user = await db.users.findOrAdd(req.auth?.payload.sub);
-    console.log(user.user_id);
-    const data = await db.accounts.find(user?.user_id);
-    res.status(200).json({
-      data: data,
-      status: 'success',
-    });
-  } catch (e) {
-    console.log(e);
+  const result = accountMutator.safeParse({
+    user_id: req.auth?.payload.sub,
+  });
+  if (result.success) {
+    try {
+      const user = await db.users.findOrAdd(req.auth?.payload.sub);
+      console.log(user.user_id);
+      const data = await db.accounts.find(user?.user_id);
+      res.status(200).json({
+        data: data,
+        status: 'success',
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  } else {
+    res.status(400).json(result.error.formErrors.fieldErrors);
+    console.log(result.error.formErrors.fieldErrors);
   }
 });
 
