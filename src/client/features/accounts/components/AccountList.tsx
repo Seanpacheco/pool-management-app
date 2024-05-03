@@ -21,6 +21,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { CreateAccountModal } from './createAccountModal';
 import { modals } from '@mantine/modals';
 import { account } from '@/client/types/Account';
+import { CreateSiteModal } from '../../sites/components/createSiteModal';
 
 interface AccordionLabelProps {
   account_id: string;
@@ -180,9 +181,7 @@ export const AccountList = () => {
                   </Menu.Target>
                   <Menu.Dropdown>
                     <Menu.Label>Options</Menu.Label>
-                    <Menu.Item leftSection={<IconPlus style={{ width: rem(14), height: rem(14) }} />}>
-                      Add Site
-                    </Menu.Item>
+                    <CreateSiteModal account_Id={item.account_id} />
                     <Menu.Item leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}>
                       Settings
                     </Menu.Item>
