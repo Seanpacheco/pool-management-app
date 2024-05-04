@@ -3,6 +3,7 @@ import { cn } from './../.././../db-config';
 import { Diagnostics } from './diagnostics';
 import { UsersRepository } from './repos/users';
 import { AccountsRepository } from './repos/index';
+import { SitesRepository } from './repos/index';
 import { IExtensions } from './repos/index';
 
 type ExtendedProtocol = IDatabase<IExtensions> & IExtensions;
@@ -17,6 +18,7 @@ const initOptions: IInitOptions<IExtensions> = {
     // which should be as fast as possible.
     obj.users = new UsersRepository(obj, pgp);
     obj.accounts = new AccountsRepository(obj, pgp);
+    obj.sites = new SitesRepository(obj, pgp);
   },
 };
 
