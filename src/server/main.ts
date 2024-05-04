@@ -5,7 +5,8 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import morgan from 'morgan';
 import { db } from './db/connection';
-import { accountInitializer, accountMutator } from './db/schemas/public/Account';
+import { accountInitializer, accountMutator, account } from './db/schemas/public/Account';
+import { siteInitializer, siteMutator, site } from './db/schemas/public/Site';
 
 dotenv.config();
 
@@ -71,7 +72,7 @@ app.delete('/api/v1/accounts/:id', validateAccessToken, async (req, res) => {
 
 app.get('/api/v1/accounts', validateAccessToken, async (req, res) => {
   console.log('getting accounts');
-  const result = accountMutator.safeParse({
+  const result = account.safeParse({
     user_id: req.auth?.payload.sub,
   });
   if (result.success) {
@@ -83,6 +84,37 @@ app.get('/api/v1/accounts', validateAccessToken, async (req, res) => {
         data: data,
         status: 'success',
       });
+    } catch (e) {
+      console.log(e);
+    }
+  } else {
+    res.status(400).json(result.error.formErrors.fieldErrors);
+    console.log(result.error.formErrors.fieldErrors);
+  }
+});
+
+app.post('/api/v1/sites', validateAccessToken, async (req, res) => {
+  console.log('adding site');
+  console.log(req.body.account_name);
+  const result = siteInitializer.safeParse({
+    account_id: req.body.account_id,
+    address: req.body.address,
+    postal_code: req.body.postal_code,
+    email: req.body.email,
+    phone: req.body.phone,
+  });
+  if (result.success) {
+    try {
+      const data = await db.sites.add({
+        account_id: req.body.account_id,
+        address: req.body.address,
+        postal_code: req.body.postal_code,
+        email: req.body.email,
+        phone: req.body.phone,
+      });
+      res.status(200).json({ data: data, status: 'Site added and response sent successfully!' });
+      console.log(data);
+      console.log('site added');
     } catch (e) {
       console.log(e);
     }
