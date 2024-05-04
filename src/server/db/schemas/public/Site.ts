@@ -67,7 +67,7 @@ export interface SiteMutator {
   updated_at?: Date;
 }
 
-export const siteSiteId = z.string() as unknown as z.Schema<SiteSiteId>;
+export const siteSiteId = z.string().uuid() as unknown as z.Schema<SiteSiteId>;
 
 export const site = z.object({
   site_id: siteSiteId,
@@ -75,7 +75,7 @@ export const site = z.object({
   address: z.string().nullable(),
   postal_code: z.string().nullable(),
   phone: z.string().nullable(),
-  email: z.string().nullable(),
+  email: z.string().email().nullable(),
   created_at: z.date(),
   updated_at: z.date(),
 }) as unknown as z.Schema<Site>;
@@ -86,7 +86,7 @@ export const siteInitializer = z.object({
   address: z.string().optional().nullable(),
   postal_code: z.string().optional().nullable(),
   phone: z.string().optional().nullable(),
-  email: z.string().optional().nullable(),
+  email: z.string().email().optional().nullable(),
   created_at: z.date().optional(),
   updated_at: z.date().optional(),
 }) as unknown as z.Schema<SiteInitializer>;
@@ -97,7 +97,7 @@ export const siteMutator = z.object({
   address: z.string().optional().nullable(),
   postal_code: z.string().optional().nullable(),
   phone: z.string().optional().nullable(),
-  email: z.string().optional().nullable(),
+  email: z.string().email().optional().nullable(),
   created_at: z.date().optional(),
   updated_at: z.date().optional(),
 }) as unknown as z.Schema<SiteMutator>;
