@@ -5,3 +5,7 @@
 .menuIcon {
   margin: 0.5rem;
 }
+
+.icon {
+  color: light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-3));
+}
