@@ -22,6 +22,7 @@ import { CreateAccountModal } from './createAccountModal';
 import { modals } from '@mantine/modals';
 import { account } from '@/client/types/Account';
 import { CreateSiteModal } from '../../sites/components/createSiteModal';
+import { SiteList } from '../../sites/components/siteList';
 
 interface AccordionLabelProps {
   account_id: string;
@@ -204,6 +205,7 @@ export const AccountList = () => {
               </Center>
               <Accordion.Panel>
                 <Text size="sm">{item.phone}</Text>
+                <SiteList />
               </Accordion.Panel>
             </Accordion.Item>
           ))}

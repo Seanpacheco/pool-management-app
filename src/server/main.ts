@@ -21,6 +21,7 @@ app.get('/hello', (_, res) => {
   res.send('Hello Vite + React + TypeScript!');
 });
 
+//account endpoints
 app.post('/api/v1/accounts', validateAccessToken, async (req, res) => {
   console.log('adding account');
   console.log(req.body.account_name);
@@ -72,27 +73,21 @@ app.delete('/api/v1/accounts/:id', validateAccessToken, async (req, res) => {
 
 app.get('/api/v1/accounts', validateAccessToken, async (req, res) => {
   console.log('getting accounts');
-  const result = account.safeParse({
-    user_id: req.auth?.payload.sub,
-  });
-  if (result.success) {
-    try {
-      const user = await db.users.findOrAdd(req.auth?.payload.sub);
-      console.log(user.user_id);
-      const data = await db.accounts.find(user?.user_id);
-      res.status(200).json({
-        data: data,
-        status: 'success',
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  } else {
-    res.status(400).json(result.error.formErrors.fieldErrors);
-    console.log(result.error.formErrors.fieldErrors);
+
+  try {
+    const user = await db.users.findOrAdd(req.auth?.payload.sub);
+    console.log(user.user_id);
+    const data = await db.accounts.find(user?.user_id);
+    res.status(200).json({
+      data: data,
+      status: 'success',
+    });
+  } catch (e) {
+    console.log(e);
   }
 });
 
+//site endpoints
 app.post('/api/v1/sites', validateAccessToken, async (req, res) => {
   console.log('adding site');
   console.log(req.body.account_name);
@@ -115,6 +110,26 @@ app.post('/api/v1/sites', validateAccessToken, async (req, res) => {
       res.status(200).json({ data: data, status: 'Site added and response sent successfully!' });
       console.log(data);
       console.log('site added');
+    } catch (e) {
+      console.log(e);
+    }
+  } else {
+    res.status(400).json(result.error.formErrors.fieldErrors);
+    console.log(result.error.formErrors.fieldErrors);
+  }
+});
+
+app.delete('/api/v1/sites/:id', validateAccessToken, async (req, res) => {
+  const result = accountMutator.safeParse({
+    user_id: req.auth?.payload.sub,
+    site_id: req.params.id,
+  });
+  if (result.success) {
+    try {
+      const data = await db.sites.remove(req.params.id);
+      console.log('site removed');
+      console.log(data);
+      res.sendStatus(204);
     } catch (e) {
       console.log(e);
     }
