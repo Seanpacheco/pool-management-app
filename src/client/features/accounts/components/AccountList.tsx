@@ -12,7 +12,7 @@ import {
   Center,
   ActionIcon,
 } from '@mantine/core';
-import { IconHome, IconSearch, IconDots, IconSettings, IconTrash, IconPlus } from '@tabler/icons-react';
+import { IconHome, IconSearch, IconDots, IconSettings, IconTrash, IconPhoneCall, IconAt } from '@tabler/icons-react';
 import classes from './AccountList.module.css';
 import { useAccounts } from '../api/getAccounts';
 import { useDeleteAccount } from '../api/deleteAccount';
@@ -22,7 +22,7 @@ import { CreateAccountModal } from './createAccountModal';
 import { modals } from '@mantine/modals';
 import { account } from '@/client/types/Account';
 import { CreateSiteModal } from '../../sites/components/createSiteModal';
-import { SiteList } from '../../sites/components/siteList';
+import { SiteList } from '../../sites/components/SiteList';
 
 interface AccordionLabelProps {
   account_id: string;
@@ -47,7 +47,7 @@ interface AccordionLabelProps {
 //     });
 // }
 
-function AccordionLabel({ account_name, email }: AccordionLabelProps) {
+function AccordionLabel({ account_name, email, phone }: AccordionLabelProps) {
   return (
     <Group wrap="nowrap">
       <Avatar color="seaGreen" radius="xl" size="lg">
@@ -55,9 +55,18 @@ function AccordionLabel({ account_name, email }: AccordionLabelProps) {
       </Avatar>
       <div>
         <Text>{account_name}</Text>
-        <Text size="sm" c="dimmed" fw={400}>
-          {email}
-        </Text>
+        <Group wrap="nowrap" gap={10} mt={3}>
+          <IconAt stroke={1.5} size="1.1rem" className={classes.icon} />
+          <Text fz="1rem" c="dimmed">
+            {email}
+          </Text>
+        </Group>
+        <Group wrap="nowrap" gap={10} mt={5}>
+          <IconPhoneCall stroke={1.5} size="1.1rem" className={classes.icon} />
+          <Text fz="1rem" c="dimmed">
+            {phone}
+          </Text>
+        </Group>
       </div>
     </Group>
   );
@@ -84,32 +93,7 @@ export const AccountList = () => {
   }, [accounts?.data, isSuccess]);
 
   const deleteAccountMutation = useDeleteAccount({}, auth);
-  // React.useEffect(() => {
-  //   if (isSuccess) setAccountData(accounts?.data);
-  // }, [accounts?.data, isSuccess]);
 
-  // const skeletonItems = skeletonList.map((item) => (
-  //   <Skeleton key={item.account_id}>
-  //     <Accordion.Item value={item.account_id}>
-  //       <Accordion.Control>
-  //         <AccordionLabel {...item} />
-  //       </Accordion.Control>
-  //       <Accordion.Panel>
-  //         <Text size="sm">{item.phone}</Text>
-  //       </Accordion.Panel>
-  //     </Accordion.Item>
-  //   </Skeleton>
-  // ));
-  // const accountItems = accounts?.data?.map((item: Account) => (
-  //   <Accordion.Item key={item.account_id} value={item.account_id}>
-  //     <Accordion.Control>
-  //       <AccordionLabel {...item} />
-  //     </Accordion.Control>
-  //     <Accordion.Panel>
-  //       <Text size="sm">{item.phone}</Text>
-  //     </Accordion.Panel>
-  //   </Accordion.Item>
-  // ));
   const icon = <IconSearch style={{ width: rem(16), height: rem(16) }} />;
   const openDeleteModal = (accountId: string) =>
     modals.openConfirmModal({
@@ -204,7 +188,6 @@ export const AccountList = () => {
                 </Menu>
               </Center>
               <Accordion.Panel>
-                <Text size="sm">{item.phone}</Text>
                 <SiteList />
               </Accordion.Panel>
             </Accordion.Item>
