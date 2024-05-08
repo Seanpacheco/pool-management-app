@@ -1,0 +1,69 @@
+.card {
+  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+  position: relative;
+}
+
+.title {
+  font-family:
+    Greycliff CF,
+    var(--mantine-font-family);
+  font-weight: 700;
+}
+
+.item {
+  display: block;
+  width: 100%;
+  padding: var(--mantine-spacing-md);
+  color: light-dark(var(--mantine-color-black), var(--mantine-color-dark-0));
+
+  @mixin hover {
+    box-shadow: var(--mantine-shadow-md);
+    transform: scale(1.05);
+  }
+}
+
+.root {
+  position: relative;
+  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8));
+  width: fit-content;
+  padding: var(--mantine-spacing-sm);
+  border-radius: var(--mantine-radius-md);
+}
+
+.controlsGroup {
+  display: flex;
+}
+
+.control {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-dark-2));
+  border-radius: var(--mantine-radius-md);
+
+  &[data-active] {
+    color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
+  }
+
+  @mixin hover {
+    color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
+    background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-7));
+  }
+
+  &[data-active] {
+    color: var(--mantine-color-white);
+  }
+}
+
+.controlLabel {
+  position: relative;
+  z-index: 1;
+}
+
+.indicator {
+  background-color: transparent;
+  border: 3px solid var(--mantine-primary-color-filled);
+  border-radius: var(--mantine-radius-md);
+}
