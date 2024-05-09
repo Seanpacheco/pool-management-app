@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TextInput, Button, Group, Box, Input, Text, Center, Fieldset, Radio, NumberInput } from '@mantine/core';
+import { TextInput, Button, Group, Box, Input, Text, Center } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
 import { IMaskInput } from 'react-imask';
@@ -7,10 +7,11 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { PageLoadSpinner } from '../../../components/pageLoadSpinner/PageLoadSpinner';
 import { zodResolver } from 'mantine-form-zod-resolver';
 import { z } from 'zod';
+import { useCreateSite } from '../api/createSite';
 
-export const CreateSiteForm = (accountId) => {
+export const CreateSiteForm = ({ account_Id }: { account_Id: string }) => {
   const auth = useAuth0();
-  // const createAccountMutation = useCreateAccount({}, auth); // Pass the required arguments to the useCreateAccount function
+  const createSiteMutation = useCreateSite({}, auth, account_Id); // Pass the required arguments to the useCreateSite function
 
   const schema = z.object({
     address: z.string().min(2, { message: 'Address should have at least 2 letters' }),
@@ -29,38 +30,40 @@ export const CreateSiteForm = (accountId) => {
     validate: zodResolver(schema),
   });
 
-  // const handleError = (errors: typeof form.errors) => {
-  //   if (errors.installationName) {
-  //     notifications.show({ message: 'Please fill installation name field', color: 'red' });
-  //   } else if (errors.email) {
-  //     notifications.show({ message: 'Please provide a valid email', color: 'red' });
-  //   }
-  // };
-  // if (createAccountMutation.isPending) {
-  //   return <PageLoadSpinner />;
-  // }
-  // if (createAccountMutation.isSuccess)
-  //   return (
-  //     <Center>
-  //       <Text size="lg">Account Created Successfully</Text>
-  //     </Center>
-  //   );
+  const handleError = (errors: typeof form.errors) => {
+    if (errors.installationName) {
+      notifications.show({ message: 'Please fill installation name field', color: 'red' });
+    } else if (errors.email) {
+      notifications.show({ message: 'Please provide a valid email', color: 'red' });
+    }
+  };
+  if (createSiteMutation.isPending) {
+    return <PageLoadSpinner />;
+  }
+  if (createSiteMutation.isSuccess)
+    return (
+      <Center>
+        <Text size="lg">Site Created Successfully</Text>
+      </Center>
+    );
   return (
     <Box maw={500} mx="auto">
       <form
-      // method="POST"
-      // onSubmit={(event) => {
-      //   event.preventDefault();
-      //   createAccountMutation.mutateAsync({
-      //     data: {
-      //       account_name: form.values.accountName,
-      //       phone: form.values.phone,
-      //       email: form.values.email,
-      //     },
-      //     auth: auth,
-      //   });
-      //   handleError(form.errors);
-      // }}
+        method="POST"
+        onSubmit={(event) => {
+          event.preventDefault();
+          createSiteMutation.mutateAsync({
+            data: {
+              address: form.values.address,
+              phone: form.values.phone,
+              email: form.values.email,
+              postal_code: form.values.postal_code,
+              account_id: account_Id,
+            },
+            auth: auth,
+          });
+          handleError(form.errors);
+        }}
       >
         <TextInput withAsterisk label="Address" placeholder="address" {...form.getInputProps('address')} />
         <TextInput withAsterisk label="Postal Code" placeholder="postal code" {...form.getInputProps('postal_Code')} />
@@ -74,21 +77,7 @@ export const CreateSiteForm = (accountId) => {
           />
         </Input.Wrapper>
         <Group justify="flex-end" mt="md">
-          <Button
-            type="submit"
-            // onClick={async () => {
-            //   await createAccountMutation.mutateAsync({
-            //     data: {
-            //       account_name: form.values.accountName,
-            //       phone: form.values.phone,
-            //       email: form.values.email,
-            //     },
-            //     auth: auth,
-            //   });
-            // }}
-          >
-            Submit
-          </Button>
+          <Button type="submit">Submit</Button>
         </Group>
       </form>
     </Box>

@@ -67,7 +67,7 @@ export interface SiteMutator {
   updated_at?: Date;
 }
 
-export const siteSiteId = z.string() as unknown as z.Schema<SiteSiteId>;
+export const siteSiteId = z.string().uuid() as unknown as z.Schema<SiteSiteId>;
 
 export const site = z.object({
   site_id: siteSiteId,
