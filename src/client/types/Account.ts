@@ -63,7 +63,7 @@ export interface AccountMutator {
   updated_at?: Date;
 }
 
-export const accountAccountId = z.string() as unknown as z.Schema<AccountAccountId>;
+export const accountAccountId = z.string().uuid() as unknown as z.Schema<AccountAccountId>;
 
 export const account = z.object({
   account_id: accountAccountId,
