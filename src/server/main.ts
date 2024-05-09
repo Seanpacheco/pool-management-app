@@ -88,9 +88,22 @@ app.get('/api/v1/accounts', validateAccessToken, async (req, res) => {
 });
 
 //site endpoints
+app.get('/api/v1/sites:id', validateAccessToken, async (req, res) => {
+  console.log('getting sites');
+
+  try {
+    const data = await db.sites.find(req.params.id);
+    res.status(200).json({
+      data: data,
+      status: 'success',
+    });
+  } catch (e) {
+    console.log(e);
+  }
+});
+
 app.post('/api/v1/sites', validateAccessToken, async (req, res) => {
   console.log('adding site');
-  console.log(req.body.account_name);
   const result = siteInitializer.safeParse({
     account_id: req.body.account_id,
     address: req.body.address,
@@ -120,12 +133,13 @@ app.post('/api/v1/sites', validateAccessToken, async (req, res) => {
 });
 
 app.delete('/api/v1/sites/:id', validateAccessToken, async (req, res) => {
-  const result = accountMutator.safeParse({
+  const result = siteMutator.safeParse({
     user_id: req.auth?.payload.sub,
     site_id: req.params.id,
   });
   if (result.success) {
     try {
+      console.log(req.params.id);
       const data = await db.sites.remove(req.params.id);
       console.log('site removed');
       console.log(data);
@@ -140,33 +154,3 @@ app.delete('/api/v1/sites/:id', validateAccessToken, async (req, res) => {
 });
 
 ViteExpress.listen(app, 3000, () => console.log('Server is listening on port 3000...'));
-
-// res.status(200).json({
-//   status: 'success',
-//   data: [
-//     {
-//       account_id: '1',
-//       account_name: 'Alex Santos',
-//       email: 'email@email.com',
-//       phone: '18081234567',
-//     },
-//     {
-//       account_id: '2',
-//       account_name: 'Viva Wittman',
-//       email: 'email@email.com',
-//       phone: '18081234567',
-//     },
-//     {
-//       account_id: '3',
-//       account_name: 'Cliff Pacheco',
-//       email: 'email@email.com',
-//       phone: '18081234567',
-//     },
-//     {
-//       account_id: '4',
-//       account_name: 'Dywane Wade',
-//       email: 'email@email.com',
-//       phone: '18081234567',
-//     },
-//   ],
-// });

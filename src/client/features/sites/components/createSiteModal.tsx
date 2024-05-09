@@ -13,7 +13,7 @@ export const CreateSiteModal = ({ account_Id }: { account_Id: string }) => {
           modals.open({
             title: 'Add Site',
             centered: true,
-            children: <CreateSiteForm accountId={account_Id} />,
+            children: <CreateSiteForm account_Id={account_Id} />,
           });
         }}
         leftSection={<IconPlus style={{ width: rem(14), height: rem(14) }} />}
