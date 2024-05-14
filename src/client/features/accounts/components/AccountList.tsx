@@ -78,7 +78,7 @@ const skeletonList = [
   { account_id: '4', account_name: 'Name', phone: '123456789', email: 'email' },
   { account_id: '5', account_name: 'Name', phone: '123456789', email: 'email' },
 ];
-export const AccountList = () => {
+export const AccountList = ({ handleSiteSelection }: { handleSiteSelection: (site_id: string) => void }) => {
   const auth = useAuth0();
   const { accounts, error, isLoading, isSuccess } = useAccounts(auth);
   const [accountData, setAccountData] = React.useState<Account[] | null>([]);
@@ -188,7 +188,7 @@ export const AccountList = () => {
                 </Menu>
               </Center>
               <Accordion.Panel>
-                <SiteList account_Id={item.account_id} />
+                <SiteList account_Id={item.account_id} handleSiteSelection={handleSiteSelection} />
               </Accordion.Panel>
             </Accordion.Item>
           ))}

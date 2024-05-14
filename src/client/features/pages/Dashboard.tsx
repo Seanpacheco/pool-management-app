@@ -10,6 +10,12 @@ const PRIMARY_COL_HEIGHT = rem(500);
 
 export const Dashboard = () => {
   // const SECONDARY_COL_HEIGHT = `calc(${PRIMARY_COL_HEIGHT} / 2 - var(--mantine-spacing-md) / 2)`;
+  const [selectedSiteId, setSelectedSiteId] = React.useState<string>('');
+
+  function handleSiteSelection(site_id: string) {
+    setSelectedSiteId(site_id);
+    console.log(selectedSiteId);
+  }
 
   return (
     <MainLayout>
@@ -17,7 +23,7 @@ export const Dashboard = () => {
         <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
           {/* <Skeleton height={PRIMARY_COL_HEIGHT} radius="md" animate={false} /> */}
           <Paper shadow="lg" p="xl">
-            <AccountList />
+            <AccountList handleSiteSelection={handleSiteSelection} />
           </Paper>
           <Grid gutter="md">
             <Grid.Col>

@@ -1,5 +1,15 @@
 import * as React from 'react';
-import { Text, SimpleGrid, UnstyledButton, Group, FloatingIndicator, ThemeIcon, rem, ActionIcon } from '@mantine/core';
+import {
+  Text,
+  SimpleGrid,
+  UnstyledButton,
+  Group,
+  FloatingIndicator,
+  ThemeIcon,
+  rem,
+  ActionIcon,
+  Box,
+} from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { IconPool, IconTrash, IconAt, IconPhoneCall } from '@tabler/icons-react';
 import classes from './SiteList.module.css';
@@ -10,15 +20,16 @@ import { useSites } from '../api/getSites';
 import { useDeleteSite } from '../api/deleteSite';
 import Site from '../types/Site';
 
-export function SiteList({ account_Id }: { account_Id: string }) {
+interface SiteListProps {
+  account_Id: string;
+  handleSiteSelection: (site_id: string) => void;
+}
+
+export function SiteList({ account_Id, handleSiteSelection }: SiteListProps) {
   const auth = useAuth0();
   const { sites, error, isLoading, isSuccess } = useSites(auth, account_Id);
   const [siteData, setSiteData] = React.useState<Site[] | null>([]);
-  const [selectedSiteId, setSelectedSiteId] = React.useState<string>('');
 
-  function handleSiteSelection(site_id: string) {
-    setSelectedSiteId(site_id);
-  }
   const deleteSiteMutation = useDeleteSite({}, auth, { account_id: account_Id });
 
   const openDeleteModal = (site_Id: string) =>
@@ -102,7 +113,7 @@ export function SiteList({ account_Id }: { account_Id: string }) {
 
   if (isSuccess)
     return (
-      <div className={classes.card} dir="ltr" ref={setRootRef}>
+      <Box className={classes.card} dir="ltr" ref={setRootRef}>
         <FloatingIndicator target={controlsRefs[active]} parent={rootRef} className={classes.indicator} />
         <Group justify="space-between">
           <Text className={classes.title}>Sites</Text>
@@ -110,7 +121,7 @@ export function SiteList({ account_Id }: { account_Id: string }) {
         <SimpleGrid cols={1} mt="md">
           {items}
         </SimpleGrid>
-      </div>
+      </Box>
     );
   if (error) return <Text>Error: {error.message}</Text>;
 }
