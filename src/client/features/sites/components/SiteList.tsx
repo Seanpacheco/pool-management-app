@@ -18,14 +18,16 @@ import { PageLoadSpinner } from '../../../components/pageLoadSpinner/PageLoadSpi
 import { useAuth0 } from '@auth0/auth0-react';
 import { useSites } from '../api/getSites';
 import { useDeleteSite } from '../api/deleteSite';
-import Site from '../types/Site';
+import { Site } from '../types/index';
 
 interface SiteListProps {
   account_Id: string;
-  handleSiteSelection: (site_id: string) => void;
+  setSiteSelection: (site_id: string) => void;
+  active: string;
+  handleSetActive: (site_id: string) => void;
 }
 
-export function SiteList({ account_Id, handleSiteSelection }: SiteListProps) {
+export function SiteList({ account_Id, setSiteSelection, active, handleSetActive }: SiteListProps) {
   const auth = useAuth0();
   const { sites, error, isLoading, isSuccess } = useSites(auth, account_Id);
   const [siteData, setSiteData] = React.useState<Site[] | null>([]);
@@ -55,24 +57,28 @@ export function SiteList({ account_Id, handleSiteSelection }: SiteListProps) {
 
   const [rootRef, setRootRef] = React.useState<HTMLDivElement | null>(null);
   const [controlsRefs, setControlsRefs] = React.useState<Record<string, HTMLButtonElement | null>>({});
-  const [active, setActive] = React.useState(0);
+  // const [active, setActive] = React.useState('');
 
-  const setControlRef = (index: number) => (node: HTMLButtonElement) => {
-    controlsRefs[index] = node;
+  const setControlRef = (site_Id: string) => (node: HTMLButtonElement) => {
+    controlsRefs[site_Id] = node;
     setControlsRefs(controlsRefs);
   };
 
-  const items = siteData?.map((item, index) => (
+  const items = siteData?.map((item) => (
     <UnstyledButton
-      key={item.address}
+      key={item.site_id}
       className={classes.item}
-      ref={setControlRef(index)}
+      ref={setControlRef(item.site_id)}
       onClick={() => {
-        setActive(index), handleSiteSelection(item.site_id);
+        handleSetActive(item.site_id);
       }}
-      mod={{ active: active === index }}
+      mod={{ active: active === item.site_id }}
     >
-      <Group>
+      <Group
+        onClick={() => {
+          setSiteSelection(item.site_id);
+        }}
+      >
         <ThemeIcon>
           <IconPool style={{ width: rem(24), height: rem(24) }} />
         </ThemeIcon>
@@ -96,7 +102,7 @@ export function SiteList({ account_Id, handleSiteSelection }: SiteListProps) {
           </Group>
         </div>
 
-        <ActionIcon variant="subtle" color="red">
+        <ActionIcon component="div" variant="subtle" color="red">
           <IconTrash
             onClick={() => {
               openDeleteModal(item.site_id);
@@ -114,11 +120,11 @@ export function SiteList({ account_Id, handleSiteSelection }: SiteListProps) {
   if (isSuccess)
     return (
       <Box className={classes.card} dir="ltr" ref={setRootRef}>
-        <FloatingIndicator target={controlsRefs[active]} parent={rootRef} className={classes.indicator} />
         <Group justify="space-between">
           <Text className={classes.title}>Sites</Text>
         </Group>
         <SimpleGrid cols={1} mt="md">
+          <FloatingIndicator target={controlsRefs[active]} parent={rootRef} className={classes.indicator} />
           {items}
         </SimpleGrid>
       </Box>

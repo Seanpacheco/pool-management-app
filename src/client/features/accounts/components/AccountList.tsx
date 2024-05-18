@@ -78,14 +78,19 @@ const skeletonList = [
   { account_id: '4', account_name: 'Name', phone: '123456789', email: 'email' },
   { account_id: '5', account_name: 'Name', phone: '123456789', email: 'email' },
 ];
-export const AccountList = ({ handleSiteSelection }: { handleSiteSelection: (site_id: string) => void }) => {
+export const AccountList = ({ setSiteSelection }: { setSiteSelection: (site_id: string) => void }) => {
   const auth = useAuth0();
   const { accounts, error, isLoading, isSuccess } = useAccounts(auth);
   const [accountData, setAccountData] = React.useState<Account[] | null>([]);
   const [selectedAccountId, setSelectedAccountId] = React.useState<string>('');
 
+  const [active, setActive] = React.useState('');
+
   function handleAccountSelection(account_id: string) {
     setSelectedAccountId(account_id);
+  }
+  function handleSetActive(site_id: string) {
+    setActive(site_id);
   }
 
   React.useEffect(() => {
@@ -188,7 +193,12 @@ export const AccountList = ({ handleSiteSelection }: { handleSiteSelection: (sit
                 </Menu>
               </Center>
               <Accordion.Panel>
-                <SiteList account_Id={item.account_id} handleSiteSelection={handleSiteSelection} />
+                <SiteList
+                  account_Id={item.account_id}
+                  setSiteSelection={setSiteSelection}
+                  active={active}
+                  handleSetActive={handleSetActive}
+                />
               </Accordion.Panel>
             </Accordion.Item>
           ))}

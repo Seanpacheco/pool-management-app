@@ -85,7 +85,7 @@ export interface InstallationMutator {
   updated_at?: Date;
 }
 
-export const installationInstallationId = z.string() as unknown as z.Schema<InstallationInstallationId>;
+export const installationInstallationId = z.string().uuid() as unknown as z.Schema<InstallationInstallationId>;
 
 export const installation = z.object({
   installation_id: installationInstallationId,
