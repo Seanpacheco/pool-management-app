@@ -4,13 +4,13 @@ import { Modal, ActionIcon, Tooltip } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
 import { CreateInstallationForm } from './createInstallationForm';
 
-export const CreateInstallationModal = () => {
+export const CreateInstallationModal = ({ selectedSiteId }: { selectedSiteId: string }) => {
   const [opened, { open, close }] = useDisclosure(false);
 
   return (
     <>
       <Modal opened={opened} onClose={close} withCloseButton={true} title="Add Account" size="lg" centered>
-        <CreateInstallationForm />
+        <CreateInstallationForm selectedSiteId={selectedSiteId} />
       </Modal>
 
       <Tooltip label="Add Installation" position="top" withArrow>

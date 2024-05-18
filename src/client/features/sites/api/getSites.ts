@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 
 export const getSites = async ({ account_id }: { account_id: string }, auth: Auth0ContextInterface<User>) => {
   const token = await auth.getAccessTokenSilently();
-  const response = await axios.get(`/api/v1/sites${account_id}`, {
+  const response = await axios.get(`/api/v1/sites/${account_id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

@@ -1,0 +1,1 @@
+DELETE FROM installation WHERE installation_id = $1

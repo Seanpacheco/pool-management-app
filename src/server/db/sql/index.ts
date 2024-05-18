@@ -16,6 +16,11 @@ export const sites = {
   add: sql('sites/add.sql'),
   remove: sql('sites/remove.sql'),
 };
+export const installations = {
+  find: sql('installations/find.sql'),
+  add: sql('installations/add.sql'),
+  remove: sql('installations/remove.sql'),
+};
 // Helper for linking to external query files;
 function sql(file: string): QueryFile {
   const fullPath: string = join(__dirname, file); // generating full path;
