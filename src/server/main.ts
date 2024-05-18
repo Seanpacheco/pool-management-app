@@ -7,6 +7,7 @@ import morgan from 'morgan';
 import { db } from './db/connection';
 import { accountInitializer, accountMutator, account } from './db/schemas/public/Account';
 import { siteInitializer, siteMutator, site } from './db/schemas/public/Site';
+import { installationInitializer, installationMutator, installation } from './db/schemas/public/Installation';
 
 dotenv.config();
 
@@ -88,7 +89,7 @@ app.get('/api/v1/accounts', validateAccessToken, async (req, res) => {
 });
 
 //site endpoints
-app.get('/api/v1/sites:id', validateAccessToken, async (req, res) => {
+app.get('/api/v1/sites/:id', validateAccessToken, async (req, res) => {
   console.log('getting sites');
 
   try {
@@ -144,6 +145,69 @@ app.delete('/api/v1/sites/:id', validateAccessToken, async (req, res) => {
       console.log('site removed');
       console.log(data);
       res.sendStatus(204);
+    } catch (e) {
+      console.log(e);
+    }
+  } else {
+    res.status(400).json(result.error.formErrors.fieldErrors);
+    console.log(result.error.formErrors.fieldErrors);
+  }
+});
+
+//installation endpoints
+app.post('/api/v1/installations', validateAccessToken, async (req, res) => {
+  console.log('adding installation');
+  const result = installationInitializer.safeParse({
+    site_id: req.body.site_id,
+    name: req.body.name,
+    type: req.body.type,
+    shape: req.body.shape,
+    length: req.body.length,
+    width: req.body.width,
+    depth: req.body.depth,
+    gallons: req.body.gallons,
+  });
+  if (result.success) {
+    try {
+      const data = await db.installations.add({
+        site_id: req.body.site_id,
+        name: req.body.name,
+        type: req.body.type,
+        shape: req.body.shape,
+        length: req.body.length,
+        width: req.body.width,
+        depth: req.body.depth,
+        gallons: req.body.gallons,
+      });
+      res.status(200).json({ data: data, status: 'Installation added and response sent successfully!' });
+      console.log(data);
+      console.log('installation added');
+    } catch (e) {
+      console.log(e);
+    }
+  } else {
+    res.status(400).json(result.error.formErrors.fieldErrors);
+    console.log(result.error.formErrors.fieldErrors);
+  }
+});
+
+app.get('/api/v1/installations/:site_id', validateAccessToken, async (req, res) => {
+  console.log('getting installations');
+  console.log(req.params.site_id);
+  const result = installationInitializer.safeParse({
+    site_id: req.params.site_id,
+  });
+  if (result.success) {
+    try {
+      console.log(req.params.site_id);
+
+      const data = await db.installations.find(req.params.site_id);
+      console.log('db awaited');
+      res.status(200).json({
+        data: data,
+        status: 'success',
+      });
+      console.log(data);
     } catch (e) {
       console.log(e);
     }

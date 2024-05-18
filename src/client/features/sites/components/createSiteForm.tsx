@@ -31,8 +31,8 @@ export const CreateSiteForm = ({ account_Id }: { account_Id: string }) => {
   });
 
   const handleError = (errors: typeof form.errors) => {
-    if (errors.installationName) {
-      notifications.show({ message: 'Please fill installation name field', color: 'red' });
+    if (errors.address) {
+      notifications.show({ message: 'Please fill out the address field', color: 'red' });
     } else if (errors.email) {
       notifications.show({ message: 'Please provide a valid email', color: 'red' });
     }

@@ -1,9 +1,10 @@
 import pgPromise, { IInitOptions, IDatabase } from 'pg-promise';
 import { cn } from './../.././../db-config';
 import { Diagnostics } from './diagnostics';
-import { UsersRepository } from './repos/users';
+import { UsersRepository } from './repos/index';
 import { AccountsRepository } from './repos/index';
 import { SitesRepository } from './repos/index';
+import { InstallationsRepository } from './repos/index';
 import { IExtensions } from './repos/index';
 
 type ExtendedProtocol = IDatabase<IExtensions> & IExtensions;
@@ -19,6 +20,7 @@ const initOptions: IInitOptions<IExtensions> = {
     obj.users = new UsersRepository(obj, pgp);
     obj.accounts = new AccountsRepository(obj, pgp);
     obj.sites = new SitesRepository(obj, pgp);
+    obj.installations = new InstallationsRepository(obj, pgp);
   },
 };
 
