@@ -17,14 +17,14 @@ export const CreateChemLogForm = ({ selectedInstallationId }: { selectedInstalla
   const [selectedSanitizer, setSelectedSanitizer] = React.useState<string>('chlorine');
 
   const schema = z.object({
-    intallation_id: z.string().uuid({ message: 'Please select an installation' }),
+    installation_id: z.string().uuid({ message: 'Please select an installation' }),
     sanitizerLevel: z.number({ message: 'Must be a number' }),
     phLevel: z.number({ message: 'Must be a number' }),
     alkalinityLevel: z.number({ message: 'Must be a number' }).nullable(),
     calciumLevel: z.number({ message: 'Must be a number' }).nullable(),
     totalDissolvedSolids: z.number({ message: 'Must be a number' }).nullable(),
     cyanuricAcid: z.number({ message: 'Must be a number' }).nullable(),
-    logDate: z.date({ message: 'Must be a date' }),
+    logDate: z.date({ message: 'Must pick a date' }),
   });
 
   const form = useForm({
@@ -42,6 +42,12 @@ export const CreateChemLogForm = ({ selectedInstallationId }: { selectedInstalla
     validate: zodResolver(schema),
   });
 
+  const handleDateChange = (value: any) => {
+    setValue(value);
+    form.getInputProps('logDate');
+    form.setFieldValue('logDate', value);
+  };
+
   const handleError = (errors: typeof form.errors) => {
     if (errors.installation_id) {
       notifications.show({ message: 'Please select an installation', color: 'red' });
@@ -57,23 +63,27 @@ export const CreateChemLogForm = ({ selectedInstallationId }: { selectedInstalla
             method="POST"
             onSubmit={(event) => {
               event.preventDefault();
-              form.validate();
               console.log(selectedInstallationId);
-              createChemLogMutation.mutateAsync({
-                data: {
-                  sanitizer_level: form.getValues().sanitizerLevel,
-                  sanitizer_type: selectedSanitizer,
-                  ph_level: form.getValues().phLevel,
-                  alkalinity_level: form.getValues().alkalinityLevel,
-                  calcium_level: form.getValues().calciumLevel,
-                  total_dissolved_solids_level: form.getValues().totalDissolvedSolids,
-                  cynauric_acid_level: form.getValues().cyanuricAcid,
-                  installation_id: selectedInstallationId,
-                  log_date: value,
-                },
-                auth: auth,
-              });
-              handleError(form.errors);
+              form.setFieldValue('installation_id', selectedInstallationId);
+              if (form.validate().hasErrors === true) {
+                console.log(form.errors);
+                handleError(form.errors);
+              } else {
+                createChemLogMutation.mutateAsync({
+                  data: {
+                    sanitizer_level: form.getValues().sanitizerLevel,
+                    sanitizer_type: selectedSanitizer,
+                    ph_level: form.getValues().phLevel,
+                    alkalinity_level: form.getValues().alkalinityLevel,
+                    calcium_level: form.getValues().calciumLevel,
+                    total_dissolved_solids_level: form.getValues().totalDissolvedSolids,
+                    cynauric_acid_level: form.getValues().cyanuricAcid,
+                    installation_id: selectedInstallationId,
+                    log_date: form.getValues().logDate,
+                  },
+                  auth: auth,
+                });
+              }
             }}
           >
             <Flex justify="center" gap="md" direction="column">
@@ -81,8 +91,10 @@ export const CreateChemLogForm = ({ selectedInstallationId }: { selectedInstalla
                 label="Pick date"
                 placeholder="Pick date"
                 withAsterisk
+                error={form.errors.logDate}
                 value={value}
-                onChange={setValue}
+                onChange={handleDateChange}
+                key={form.key('logDate')}
               />
               <Fieldset legend="Chem Levels">
                 <Flex direction="column" gap="lg">
