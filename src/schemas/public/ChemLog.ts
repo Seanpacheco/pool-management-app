@@ -91,7 +91,7 @@ export interface ChemLogMutator {
   sanitizer_type?: string | null;
 }
 
-export const chemLogLogId = z.string().uuid() as unknown as z.Schema<ChemLogLogId>;
+export const chemLogLogId = z.string() as unknown as z.Schema<ChemLogLogId>;
 
 export const chemLog = z.object({
   log_id: chemLogLogId,
@@ -119,7 +119,7 @@ export const chemLogInitializer = z.object({
   cynauric_acid_level: z.number().optional().nullable(),
   total_dissolved_solids_level: z.number().optional().nullable(),
   calcium_level: z.number().optional().nullable(),
-  log_date: z.coerce.date(),
+  log_date: z.date(),
   sanitizer_type: z.string().optional().nullable(),
 }) as unknown as z.Schema<ChemLogInitializer>;
 

@@ -1,0 +1,1 @@
+DELETE FROM chem_log WHERE log_id = $1

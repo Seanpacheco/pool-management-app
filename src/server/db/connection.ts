@@ -5,6 +5,7 @@ import { UsersRepository } from './repos/index';
 import { AccountsRepository } from './repos/index';
 import { SitesRepository } from './repos/index';
 import { InstallationsRepository } from './repos/index';
+import { ChemLogsRepository } from './repos/index';
 import { IExtensions } from './repos/index';
 
 type ExtendedProtocol = IDatabase<IExtensions> & IExtensions;
@@ -21,6 +22,7 @@ const initOptions: IInitOptions<IExtensions> = {
     obj.accounts = new AccountsRepository(obj, pgp);
     obj.sites = new SitesRepository(obj, pgp);
     obj.installations = new InstallationsRepository(obj, pgp);
+    obj.chemLogs = new ChemLogsRepository(obj, pgp);
   },
 };
 

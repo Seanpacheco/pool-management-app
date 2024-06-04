@@ -21,6 +21,11 @@ export const installations = {
   add: sql('installations/add.sql'),
   remove: sql('installations/remove.sql'),
 };
+export const chemLogs = {
+  find: sql('chemLogs/find.sql'),
+  add: sql('chemLogs/add.sql'),
+  remove: sql('chemLogs/remove.sql'),
+};
 // Helper for linking to external query files;
 function sql(file: string): QueryFile {
   const fullPath: string = join(__dirname, file); // generating full path;
