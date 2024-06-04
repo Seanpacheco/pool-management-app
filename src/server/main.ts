@@ -8,6 +8,7 @@ import { db } from './db/connection';
 import { accountInitializer, accountMutator, account } from './db/schemas/public/Account';
 import { siteInitializer, siteMutator, site } from './db/schemas/public/Site';
 import { installationInitializer, installationMutator, installation } from './db/schemas/public/Installation';
+import { chemLogInitializer, chemLogMutator, chemLog } from './db/schemas/public/ChemLog';
 
 dotenv.config();
 
@@ -202,6 +203,73 @@ app.get('/api/v1/installations/:site_id', validateAccessToken, async (req, res) 
       console.log(req.params.site_id);
 
       const data = await db.installations.find(req.params.site_id);
+      console.log('db awaited');
+      res.status(200).json({
+        data: data,
+        status: 'success',
+      });
+      console.log(data);
+    } catch (e) {
+      console.log(e);
+    }
+  } else {
+    res.status(400).json(result.error.formErrors.fieldErrors);
+    console.log(result.error.formErrors.fieldErrors);
+  }
+});
+
+//chemLog endpoints
+
+app.post('/api/v1/chemLogs', validateAccessToken, async (req, res) => {
+  console.log('adding chemLog');
+  console.log(req.body);
+  const result = chemLogInitializer.safeParse({
+    installation_id: req.body.installation_id,
+    log_date: req.body.log_date,
+    sanitizer_level: req.body.sanitizer_level,
+    sanitizer_type: req.body.sanitizer_type,
+    ph_level: req.body.ph_level,
+    alkalinity_level: req.body.alkalinity_level,
+    calcium_level: req.body.calcium_level,
+    total_dissolved_solids_level: req.body.total_dissolved_solids_level,
+    cynauric_acid_level: req.body.cynauric_acid_level,
+  });
+  if (result.success) {
+    try {
+      const data = await db.chemLogs.add({
+        installation_id: req.body.installation_id,
+        log_date: req.body.log_date,
+        sanitizer_level: req.body.sanitizer_level,
+        sanitizer_type: req.body.sanitizer_type,
+        ph_level: req.body.ph_level,
+        alkalinity_level: req.body.alkalinity_level,
+        calcium_level: req.body.calcium_level,
+        total_dissolved_solids_level: req.body.total_dissolved_solids_level,
+        cynauric_acid_level: req.body.cynauric_acid_level,
+      });
+      res.status(200).json({ data: data, status: 'ChemLog added and response sent successfully!' });
+      console.log(data);
+      console.log('chemLog added');
+    } catch (e) {
+      console.log(e);
+    }
+  } else {
+    res.status(400).json(result.error.formErrors.fieldErrors);
+    console.log(result.error.formErrors.fieldErrors);
+  }
+});
+
+app.get('/api/v1/chemLogs/:installation_id', validateAccessToken, async (req, res) => {
+  console.log('getting chemLogs');
+  console.log(req.params.installation_id);
+  const result = installationInitializer.safeParse({
+    installation_id: req.params.installation_id,
+  });
+  if (result.success) {
+    try {
+      console.log(req.params.installation_id);
+
+      const data = await db.chemLogs.find(req.params.installation_id);
       console.log('db awaited');
       res.status(200).json({
         data: data,

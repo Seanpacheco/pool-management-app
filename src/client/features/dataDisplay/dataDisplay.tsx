@@ -5,6 +5,7 @@ import { CreateInstallationModal } from '../installations/components/createInsta
 import { useInstallations } from '../installations/api/getInstallations';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Installation } from '../installations/types';
+import { CreateChemLogForm } from '../chemLogs/components/createChemLogForm';
 import { options } from 'axios';
 
 export const DataDisplay = ({ selectedSiteId }: { selectedSiteId: string }) => {
@@ -13,6 +14,7 @@ export const DataDisplay = ({ selectedSiteId }: { selectedSiteId: string }) => {
   const { installations, error, isLoading, isSuccess } = useInstallations(auth, selectedSiteId);
   const [installationData, setInstallationData] = React.useState<Installation[]>([]);
   const [value, setValue] = React.useState<string | null>(null);
+  const [selectedInstallationName, setSelectedInstallationName] = React.useState<string | null>(null);
 
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
@@ -21,11 +23,16 @@ export const DataDisplay = ({ selectedSiteId }: { selectedSiteId: string }) => {
   React.useEffect(() => {
     if (isSuccess) setInstallationData([installations?.data]);
     setValue(null);
+    setSelectedInstallationName(null);
     console.log(installations?.data);
   }, [installations?.data, isSuccess]);
 
   const options = installations?.data.map((item: Installation) => (
-    <Combobox.Option key={item.installation_id} value={item.name}>
+    <Combobox.Option
+      key={item.installation_id}
+      value={item.installation_id}
+      onClick={() => setSelectedInstallationName(item.name)}
+    >
       {item.name}
     </Combobox.Option>
   ));
@@ -48,7 +55,7 @@ export const DataDisplay = ({ selectedSiteId }: { selectedSiteId: string }) => {
               rightSectionPointerEvents="none"
               onClick={() => combobox.toggleDropdown()}
             >
-              {value || <Input.Placeholder>Installations</Input.Placeholder>}
+              {selectedInstallationName || <Input.Placeholder>Installations</Input.Placeholder>}
             </InputBase>
           </Combobox.Target>
 
@@ -71,11 +78,13 @@ export const DataDisplay = ({ selectedSiteId }: { selectedSiteId: string }) => {
             Notes
           </Tabs.Tab>
           <Tabs.Tab value="options" leftSection={<IconSettings style={iconStyle} />}>
-            Notes
+            Options
           </Tabs.Tab>
         </Tabs.List>
 
-        <Tabs.Panel value="chems">Chem tab content</Tabs.Panel>
+        <Tabs.Panel value="chems">
+          <CreateChemLogForm selectedInstallationId={value} />
+        </Tabs.Panel>
 
         <Tabs.Panel value="history">History tab content</Tabs.Panel>
 

@@ -64,10 +64,8 @@ export const AppProvider = ({ children }: AppProviderProps) => {
           <Router>
             <Auth0ProviderWithNavigate>
               <MantineProvider theme={theme}>
-                <ModalsProvider>
-                  <Notifications position="bottom-right" />
-                  {children}
-                </ModalsProvider>
+                <Notifications position="bottom-right" />
+                <ModalsProvider>{children}</ModalsProvider>
               </MantineProvider>
             </Auth0ProviderWithNavigate>
           </Router>

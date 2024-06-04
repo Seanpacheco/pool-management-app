@@ -62,7 +62,7 @@ export interface NoteMutator {
   updated_at?: Date;
 }
 
-export const noteNoteId = z.string().uuid() as unknown as z.Schema<NoteNoteId>;
+export const noteNoteId = z.string() as unknown as z.Schema<NoteNoteId>;
 
 export const note = z.object({
   note_id: noteNoteId,
