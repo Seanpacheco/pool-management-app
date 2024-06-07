@@ -9,7 +9,7 @@ export const CreateInstallationModal = ({ selectedSiteId }: { selectedSiteId: st
 
   return (
     <>
-      <Modal opened={opened} onClose={close} withCloseButton={true} title="Add Account" size="lg" centered>
+      <Modal opened={opened} onClose={close} withCloseButton={true} title="Add Installation" size="lg" centered>
         <CreateInstallationForm selectedSiteId={selectedSiteId} />
       </Modal>
 
