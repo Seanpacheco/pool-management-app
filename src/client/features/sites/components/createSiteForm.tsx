@@ -14,6 +14,7 @@ export const CreateSiteForm = ({ account_Id }: { account_Id: string }) => {
   const createSiteMutation = useCreateSite({}, auth, account_Id); // Pass the required arguments to the useCreateSite function
 
   const schema = z.object({
+    account_id: z.string().uuid({ message: 'Please select an account' }),
     address: z.string().min(2, { message: 'Address should have at least 2 letters' }),
     postal_code: z.string().min(5, { message: 'Postal code should have at least 5 digits' }),
     phone: z.string().min(17, { message: 'Phone should have at least 11 digits' }),
@@ -21,6 +22,7 @@ export const CreateSiteForm = ({ account_Id }: { account_Id: string }) => {
   });
 
   const form = useForm({
+    mode: 'uncontrolled',
     initialValues: {
       address: '',
       postal_code: '',
@@ -52,23 +54,46 @@ export const CreateSiteForm = ({ account_Id }: { account_Id: string }) => {
         method="POST"
         onSubmit={(event) => {
           event.preventDefault();
-          createSiteMutation.mutateAsync({
-            data: {
-              address: form.values.address,
-              phone: form.values.phone,
-              email: form.values.email,
-              postal_code: form.values.postal_code,
-              account_id: account_Id,
-            },
-            auth: auth,
-          });
-          handleError(form.errors);
+          form.setFieldValue('account_id', account_Id); // Set the account_id to the account_Id passed in the props
+          if (form.validate().hasErrors === true) {
+            console.log(form.errors);
+            handleError(form.errors);
+          } else {
+            createSiteMutation.mutateAsync({
+              data: {
+                address: form.getValues().address,
+                phone: form.getValues().phone,
+                email: form.getValues().email,
+                postal_code: form.getValues().postal_code,
+                account_id: account_Id,
+              },
+              auth: auth,
+            });
+          }
         }}
       >
-        <TextInput withAsterisk label="Address" placeholder="address" {...form.getInputProps('address')} />
-        <TextInput withAsterisk label="Postal Code" placeholder="postal code" {...form.getInputProps('postal_Code')} />
-        <TextInput withAsterisk label="Email" placeholder="account@email.com" {...form.getInputProps('email')} />
-        <Input.Wrapper withAsterisk label="Phone Number" {...form.getInputProps('phone')}>
+        <TextInput
+          withAsterisk
+          label="Address"
+          placeholder="address"
+          key={form.key('address')}
+          {...form.getInputProps('address')}
+        />
+        <TextInput
+          withAsterisk
+          label="Postal Code"
+          placeholder="postal code"
+          key={form.key('postal_code')}
+          {...form.getInputProps('postal_code')}
+        />
+        <TextInput
+          withAsterisk
+          label="Email"
+          placeholder="account@email.com"
+          key={form.key('email')}
+          {...form.getInputProps('email')}
+        />
+        <Input.Wrapper withAsterisk label="Phone Number" key={form.key('phone')} {...form.getInputProps('phone')}>
           <Input
             component={IMaskInput}
             mask="+1 (000) 000-0000"
