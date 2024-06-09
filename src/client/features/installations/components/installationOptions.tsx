@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, ActionIcon, Container, Flex } from '@mantine/core';
+import { Text, Container, Flex, Fieldset, Button } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { IconTrash } from '@tabler/icons-react';
 import { useDeleteInstallation } from '../api/deleteInstallation';
@@ -30,18 +30,20 @@ export function InstallationOptions({ installationId, site_id }: { installationI
 
   return (
     <Container>
-      <Flex>
-        <ActionIcon component="div" variant="subtle" color="red">
-          <IconTrash
+      <Fieldset legend="Installation Options">
+        <Flex>
+          <Button
+            rightSection={<IconTrash size={16} />}
+            color="red"
             onClick={() => {
               openDeleteModal(installationId);
             }}
-            style={{ width: '75%', height: '75%' }}
-            stroke={1.5}
-          />
-        </ActionIcon>
-        <Text>Delete Installation</Text>
-      </Flex>
+          >
+            Delete Installation
+          </Button>
+          {/* <ActionIcon component="div" variant="subtle" color="red"></ActionIcon> */}
+        </Flex>
+      </Fieldset>
     </Container>
   );
 }
