@@ -45,8 +45,6 @@ export const UseCreateChemLog = (
       const previousChemLogs = queryClient.getQueryData<chemLog[]>(['chemLogs', { auth, installation_id }]);
 
       queryClient.setQueryData(['chemLogs', { auth }], [previousChemLogs || [], newChemLog.data]);
-      console.log(previousChemLogs);
-      console.log(newChemLog.data);
 
       return { previousChemLogs };
     },
@@ -56,12 +54,9 @@ export const UseCreateChemLog = (
       }
     },
     onSuccess: () => {
-      console.log('mutate success');
-
       try {
         queryClient.invalidateQueries({ queryKey: ['chemLogs', { auth, installation_id }] });
         notifications.show({ message: 'chemLog created', color: 'green' });
-        console.log('mutate success 2');
       } catch (e) {
         console.log(e);
       }

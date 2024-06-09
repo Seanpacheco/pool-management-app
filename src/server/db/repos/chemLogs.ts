@@ -35,8 +35,8 @@ export class ChemLogsRepository {
       cynauric_acid_level: values.cynauric_acid_level,
     });
   }
-  find(installation_id: string | Promise<AppUser>): Promise<ChemLog[]> {
-    return db.manyOrNone(sql.find, installation_id);
+  find(installation_id: string | Promise<AppUser>, startDate: string, endDate: string): Promise<ChemLog[]> {
+    return db.manyOrNone(sql.find, [installation_id, startDate, endDate]);
   }
   remove(log_id: string): Promise<number> {
     return db.result(sql.remove, log_id, (r: IResult) => r.rowCount);

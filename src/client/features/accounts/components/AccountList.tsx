@@ -11,6 +11,8 @@ import {
   Skeleton,
   Center,
   ActionIcon,
+  Pagination,
+  Flex,
 } from '@mantine/core';
 import { IconHome, IconSearch, IconDots, IconSettings, IconTrash, IconPhoneCall, IconAt } from '@tabler/icons-react';
 import classes from './AccountList.module.css';
@@ -23,6 +25,8 @@ import { modals } from '@mantine/modals';
 import { account } from '@/client/types/Account';
 import { CreateSiteModal } from '../../sites/components/createSiteModal';
 import { SiteList } from '../../sites/components/SiteList';
+import { set } from 'zod';
+import { useDebounce } from 'use-debounce';
 
 interface AccordionLabelProps {
   account_id: string;
@@ -80,11 +84,16 @@ const skeletonList = [
 ];
 export const AccountList = ({ setSiteSelection }: { setSiteSelection: (site_id: string) => void }) => {
   const auth = useAuth0();
-  const { accounts, error, isLoading, isSuccess } = useAccounts(auth);
+
   const [accountData, setAccountData] = React.useState<Account[] | null>([]);
   const [selectedAccountId, setSelectedAccountId] = React.useState<string>('');
-
+  const [activePage, setPage] = React.useState(1);
   const [active, setActive] = React.useState('');
+  const [totalPages, setTotalPages] = React.useState(0);
+  const [search, setSearch] = React.useState<string>(' ');
+  const [debouncedSearch] = useDebounce(search, 300);
+
+  const { accounts, error, isLoading, isSuccess } = useAccounts(auth, activePage, debouncedSearch);
 
   function handleAccountSelection(account_id: string) {
     setSelectedAccountId(account_id);
@@ -92,9 +101,15 @@ export const AccountList = ({ setSiteSelection }: { setSiteSelection: (site_id: 
   function handleSetActive(site_id: string) {
     setActive(site_id);
   }
+  function handleSearchChange(event: React.ChangeEvent<HTMLInputElement>) {
+    console.log(event.currentTarget.value.toString());
+    if (event.currentTarget.value != '') setSearch(event.currentTarget.value);
+    else setSearch(' ');
+  }
 
   React.useEffect(() => {
     if (isSuccess) setAccountData(accounts?.data);
+    setTotalPages(Math.ceil(accounts?.data[0]?.full_count / 5));
   }, [accounts?.data, isSuccess]);
 
   const deleteAccountMutation = useDeleteAccount({}, auth);
@@ -148,12 +163,17 @@ export const AccountList = ({ setSiteSelection }: { setSiteSelection: (site_id: 
     return (
       <>
         <Group justify="flex-end" grow>
-          <TextInput placeholder="Search" rightSection={icon} />
+          <TextInput
+            placeholder="Search"
+            value={search == ' ' ? '' : search}
+            onChange={handleSearchChange}
+            rightSection={icon}
+          />
           <CreateAccountModal />
         </Group>
         <Divider my="md" />
         <Accordion classNames={{ item: classes.item }} chevronPosition="left" variant="contained">
-          {accountData?.map((item: Account) => (
+          {accounts?.data?.map((item: Account) => (
             <Accordion.Item key={item.account_id} value={item.account_id}>
               <Center>
                 <Accordion.Control
@@ -203,10 +223,12 @@ export const AccountList = ({ setSiteSelection }: { setSiteSelection: (site_id: 
             </Accordion.Item>
           ))}
         </Accordion>
+        <Flex justify="center">
+          <Pagination value={activePage} onChange={setPage} total={totalPages ? totalPages : 0} />
+        </Flex>
       </>
     );
   // items = accountItems;
-  console.log(accounts.data);
 
   if (error) return <div>An error occurred</div>;
 

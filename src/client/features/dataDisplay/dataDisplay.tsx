@@ -1,12 +1,13 @@
 import * as React from 'react';
-import { Tabs, rem, Group, Divider, Combobox, useCombobox, Input, InputBase, ComboboxStore } from '@mantine/core';
+import { Tabs, rem, Group, Divider, Combobox, useCombobox, Input, InputBase } from '@mantine/core';
 import { IconFlask, IconClipboard, IconChartDots2, IconSettings } from '@tabler/icons-react';
 import { CreateInstallationModal } from '../installations/components/createInstallationModal';
 import { useInstallations } from '../installations/api/getInstallations';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Installation } from '../installations/types';
 import { CreateChemLogForm } from '../chemLogs/components/createChemLogForm';
-import { options } from 'axios';
+import { ChemLogDataDisplay } from '../chemLogs/components/chemLogDataDisplay';
+import { InstallationOptions } from '../installations/components/installationOptions';
 
 export const DataDisplay = ({ selectedSiteId }: { selectedSiteId: string }) => {
   const auth = useAuth0();
@@ -24,7 +25,6 @@ export const DataDisplay = ({ selectedSiteId }: { selectedSiteId: string }) => {
     if (isSuccess) setInstallationData([installations?.data]);
     setValue(null);
     setSelectedInstallationName(null);
-    console.log(installations?.data);
   }, [installations?.data, isSuccess]);
 
   const options = installations?.data.map((item: Installation) => (
@@ -74,9 +74,9 @@ export const DataDisplay = ({ selectedSiteId }: { selectedSiteId: string }) => {
           <Tabs.Tab value="history" leftSection={<IconChartDots2 style={iconStyle} />}>
             History
           </Tabs.Tab>
-          <Tabs.Tab value="notes" leftSection={<IconClipboard style={iconStyle} />}>
+          {/* <Tabs.Tab value="notes" leftSection={<IconClipboard style={iconStyle} />}>
             Notes
-          </Tabs.Tab>
+          </Tabs.Tab> */}
           <Tabs.Tab value="options" leftSection={<IconSettings style={iconStyle} />}>
             Options
           </Tabs.Tab>
@@ -86,9 +86,13 @@ export const DataDisplay = ({ selectedSiteId }: { selectedSiteId: string }) => {
           <CreateChemLogForm selectedInstallationId={value} />
         </Tabs.Panel>
 
-        <Tabs.Panel value="history">History tab content</Tabs.Panel>
+        <Tabs.Panel value="history">
+          <ChemLogDataDisplay selectedInstallationId={value} />
+        </Tabs.Panel>
 
-        <Tabs.Panel value="notes">Notes tab content</Tabs.Panel>
+        <Tabs.Panel value="options">
+          <InstallationOptions installationId={value} site_id={selectedSiteId} />
+        </Tabs.Panel>
       </Tabs>
     </>
   );

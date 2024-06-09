@@ -5,23 +5,29 @@ import { IMaskInput } from 'react-imask';
 import { notifications } from '@mantine/notifications';
 import { useCreateAccount } from '../api/createAccount';
 import { useAuth0 } from '@auth0/auth0-react';
+import { z } from 'zod';
+import { zodResolver } from 'mantine-form-zod-resolver';
 import { PageLoadSpinner } from '../../../components/pageLoadSpinner/PageLoadSpinner';
 
 export const CreateAccountForm = () => {
   const auth = useAuth0();
   const createAccountMutation = useCreateAccount({}, auth); // Pass the required arguments to the useCreateAccount function
+
+  const schema = z.object({
+    accountName: z.string().min(2, { message: 'Account name must have at least 2 letters' }),
+    email: z.string().email({ message: 'Invalid email' }),
+    phone: z.string().min(17, { message: 'Phone number must have at least 11 digits' }),
+  });
+
   const form = useForm({
+    mode: 'uncontrolled',
     initialValues: {
       accountName: '',
       email: '',
       phone: '',
     },
 
-    validate: {
-      accountName: (value) => (value.length < 2 ? 'Account name must have at least 2 letters' : null),
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
-      phone: (value) => (value.length < 17 ? 'Phone number must have at least 11 digits' : null),
-    },
+    validate: zodResolver(schema),
   });
   const handleError = (errors: typeof form.errors) => {
     if (errors.accountName) {
@@ -45,25 +51,35 @@ export const CreateAccountForm = () => {
         // method="POST"
         onSubmit={(event) => {
           event.preventDefault();
-          createAccountMutation.mutateAsync({
-            data: {
-              account_name: form.values.accountName,
-              phone: form.values.phone,
-              email: form.values.email,
-            },
-            auth: auth,
-          });
-          handleError(form.errors);
+          if (form.validate().hasErrors === true) {
+            handleError(form.errors);
+          } else {
+            createAccountMutation.mutateAsync({
+              data: {
+                account_name: form.values.accountName,
+                phone: form.values.phone,
+                email: form.values.email,
+              },
+              auth: auth,
+            });
+          }
         }}
       >
         <TextInput
           withAsterisk
           label="Account Name"
           placeholder="account name"
+          key={form.key('accountName')}
           {...form.getInputProps('accountName')}
         />
-        <TextInput withAsterisk label="Email" placeholder="account@email.com" {...form.getInputProps('email')} />
-        <Input.Wrapper withAsterisk label="Phone Number" {...form.getInputProps('phone')}>
+        <TextInput
+          withAsterisk
+          label="Email"
+          placeholder="account@email.com"
+          key={form.key('email')}
+          {...form.getInputProps('email')}
+        />
+        <Input.Wrapper withAsterisk label="Phone Number" key={form.key('phone')} {...form.getInputProps('phone')}>
           <Input
             component={IMaskInput}
             mask="+1 (000) 000-0000"

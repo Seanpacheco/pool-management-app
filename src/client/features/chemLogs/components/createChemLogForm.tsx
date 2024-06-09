@@ -63,10 +63,9 @@ export const CreateChemLogForm = ({ selectedInstallationId }: { selectedInstalla
             method="POST"
             onSubmit={(event) => {
               event.preventDefault();
-              console.log(selectedInstallationId);
+
               form.setFieldValue('installation_id', selectedInstallationId);
               if (form.validate().hasErrors === true) {
-                console.log(form.errors);
                 handleError(form.errors);
               } else {
                 createChemLogMutation.mutateAsync({
