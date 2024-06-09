@@ -56,9 +56,9 @@ export const CreateAccountForm = () => {
           } else {
             createAccountMutation.mutateAsync({
               data: {
-                account_name: form.values.accountName,
-                phone: form.values.phone,
-                email: form.values.email,
+                account_name: form.getValues().accountName,
+                phone: form.getValues().phone,
+                email: form.getValues().email,
               },
               auth: auth,
             });
