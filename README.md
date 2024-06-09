@@ -20,7 +20,7 @@ An app to track chemical levels, repairs, and changes for multiple pools/spas on
       Currently have the skeleton for most features of the dashboard. Adding and deleting accounts with React-query is up and running with form validation client and server side.
 - [x] Build out routes and add authentication
       Simple route using React-router implemented to take user from landing page to dashboard. Auth0 is used for authentication.
-- [ ] Add chemical logging
+- [x] Add chemical logging
 - [ ] Add user chemical preferences
 - [ ] Add notes
 - [ ] Add data graphs
