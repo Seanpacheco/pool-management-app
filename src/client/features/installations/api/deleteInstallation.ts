@@ -14,7 +14,7 @@ export const deleteInstallation = async (
       Authorization: `Bearer ${token}`,
     },
   });
-  console.log(response);
+
   return response;
 };
 
@@ -33,7 +33,6 @@ export const useDeleteInstallation = (
 
       const previousInstallations = queryClient.getQueryData(['installations', { auth, site_id }]);
 
-      console.log('onMutate success');
       return { previousInstallations };
     },
     onError: (_, __, context: any) => {

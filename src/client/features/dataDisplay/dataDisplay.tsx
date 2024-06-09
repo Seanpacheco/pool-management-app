@@ -25,7 +25,6 @@ export const DataDisplay = ({ selectedSiteId }: { selectedSiteId: string }) => {
     if (isSuccess) setInstallationData([installations?.data]);
     setValue(null);
     setSelectedInstallationName(null);
-    console.log(installations?.data);
   }, [installations?.data, isSuccess]);
 
   const options = installations?.data.map((item: Installation) => (

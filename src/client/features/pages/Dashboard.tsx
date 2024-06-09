@@ -19,14 +19,8 @@ export const Dashboard = () => {
 
   // React.useEffect(() => {
   //   if (isSuccess) setInstallationData([installations?.data]);
-  //   console.log(installations?.data);
+  //
   // }, [installations?.data, isSuccess]);
-
-  function handleSiteSelection(site_id: string) {
-    console.log('site ID:', site_id);
-    setSelectedSiteId(site_id);
-    console.log(selectedSiteId);
-  }
 
   return (
     <MainLayout>

@@ -47,8 +47,6 @@ export const UseCreateInstallation = (
       const previousInstallations = queryClient.getQueryData<Installation[]>(['installations', { auth, site_id }]);
 
       queryClient.setQueryData(['installations', { auth }], [previousInstallations || [], newInstallation.data]);
-      console.log(previousInstallations);
-      console.log(newInstallation.data);
 
       return { previousInstallations };
     },
@@ -58,12 +56,9 @@ export const UseCreateInstallation = (
       }
     },
     onSuccess: () => {
-      console.log('mutate success');
-
       try {
         queryClient.invalidateQueries({ queryKey: ['installations', { auth, site_id }] });
         notifications.show({ message: 'Installation created', color: 'green' });
-        console.log('mutate success 2');
       } catch (e) {
         console.log(e);
       }

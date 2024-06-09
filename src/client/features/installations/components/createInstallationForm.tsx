@@ -63,7 +63,6 @@ export const CreateInstallationForm = ({ selectedSiteId }: { selectedSiteId: str
           event.preventDefault();
           form.setFieldValue('site_id', selectedSiteId);
           if (form.validate().hasErrors === true) {
-            console.log(form.errors);
             handleError(form.errors);
           } else {
             createInstallationMutation.mutateAsync({

@@ -56,7 +56,6 @@ export const CreateSiteForm = ({ account_Id }: { account_Id: string }) => {
           event.preventDefault();
           form.setFieldValue('account_id', account_Id); // Set the account_id to the account_Id passed in the props
           if (form.validate().hasErrors === true) {
-            console.log(form.errors);
             handleError(form.errors);
           } else {
             createSiteMutation.mutateAsync({
