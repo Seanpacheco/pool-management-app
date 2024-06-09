@@ -15,12 +15,19 @@ interface ChemLogDataCardProps {
   selectedDate: Date | null;
   setSelectedDate: (date: Date) => void;
   setValue: (value: string | null) => void;
+  selectedInstallationId: string | null;
 }
 
-export function ChemLogDataCard({ chemLogData, selectedDate, setSelectedDate, setValue }: ChemLogDataCardProps) {
+export function ChemLogDataCard({
+  chemLogData,
+  selectedDate,
+  setSelectedDate,
+  setValue,
+  selectedInstallationId,
+}: ChemLogDataCardProps) {
   const auth = useAuth0();
   const [date, setDate] = useState<Date | null>(selectedDate);
-  const deleteChemLogMutation = useDeleteChemLog({}, auth, { log_id: '' });
+  const deleteChemLogMutation = useDeleteChemLog({}, auth, { installation_id: selectedInstallationId });
 
   const openDeleteModal = (log_Id: string) =>
     modals.openConfirmModal({
@@ -121,7 +128,7 @@ export function ChemLogDataCard({ chemLogData, selectedDate, setSelectedDate, se
           <Paper className={classes.stat} radius="md" shadow="md" p="xs">
             <Text className={classes.icon}>{stat.cynauric_acid_level ? 'n/a' : stat.cynauric_acid_level} ppm</Text>
             <div>
-              <Text className={classes.value}>Cyanauric Acid</Text>
+              <Text className={classes.value}>Cynauric Acid</Text>
             </div>
           </Paper>
         </Group>

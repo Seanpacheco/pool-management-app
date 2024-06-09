@@ -11,6 +11,7 @@ import { siteInitializer, siteMutator, site } from './db/schemas/public/Site';
 import { installationInitializer, installationMutator, installation } from './db/schemas/public/Installation';
 import { chemLogInitializer, chemLogMutator, chemLog } from './db/schemas/public/ChemLog';
 import { log } from 'console';
+import { z } from 'zod';
 
 dotenv.config();
 
@@ -75,19 +76,32 @@ app.delete('/api/v1/accounts/:id', validateAccessToken, async (req, res) => {
   }
 });
 
-app.get('/api/v1/accounts', validateAccessToken, async (req, res) => {
-  console.log('getting accounts');
+app.get('/api/v1/accounts/search/:search/page/:page', validateAccessToken, async (req, res) => {
+  const result = z.number().safeParse(parseInt(req.params.page, 10));
+  const wildcard = '%';
+  let searchString = wildcard + req.params.search + wildcard;
+  if (req.params.search === ' ' || req.params.search === '') {
+    searchString = '%%';
+  }
 
-  try {
-    const user = await db.users.findOrAdd(req.auth?.payload.sub);
-    console.log(user.user_id);
-    const data = await db.accounts.find(user?.user_id);
-    res.status(200).json({
-      data: data,
-      status: 'success',
-    });
-  } catch (e) {
-    console.log(e);
+  if (result.success) {
+    try {
+      console.log('search param:', req.params.search);
+      const user = await db.users.findOrAdd(req.auth?.payload.sub);
+      console.log(user.user_id);
+      const page = parseInt(req.params.page, 10); // Convert the string to a number
+      const data = await db.accounts.find(user?.user_id, searchString, page);
+      console.log(data);
+      res.status(200).json({
+        data: data,
+        status: 'success',
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  } else {
+    res.status(400).json(result.error.formErrors.fieldErrors);
+    console.log(result.error.formErrors.fieldErrors);
   }
 });
 

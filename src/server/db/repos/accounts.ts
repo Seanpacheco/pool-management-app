@@ -20,9 +20,10 @@ export class AccountsRepository {
       phone: values.phone,
     });
   }
-  find(user_id: string | Promise<AppUser>): Promise<Account[]> {
-    return db.manyOrNone(sql.find, user_id);
+  find(user_id: string | Promise<AppUser>, search: string, page: number): Promise<Account[]> {
+    return db.manyOrNone(sql.find, [user_id, search, (page - 1) * 5]);
   }
+
   remove(account_id: string): Promise<number> {
     return db.result(sql.remove, account_id, (r: IResult) => r.rowCount);
   }
