@@ -52,7 +52,6 @@ export const CreateAccountForm = () => {
         onSubmit={(event) => {
           event.preventDefault();
           if (form.validate().hasErrors === true) {
-            console.log(form.errors);
             handleError(form.errors);
           } else {
             createAccountMutation.mutateAsync({

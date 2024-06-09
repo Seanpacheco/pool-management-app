@@ -41,8 +41,6 @@ export const useCreateSite = (
       const previousSites = queryClient.getQueryData<Site[]>(['sites', { auth, account_id }]);
 
       queryClient.setQueryData(['sites', { auth }], [previousSites || [], newSite.data]);
-      console.log(previousSites);
-      console.log(newSite.data);
 
       return { previousSites };
     },
@@ -52,12 +50,9 @@ export const useCreateSite = (
       }
     },
     onSuccess: () => {
-      console.log('mutate success');
-
       try {
         queryClient.invalidateQueries({ queryKey: ['sites', { auth, account_id }] });
         notifications.show({ message: 'Site created', color: 'green' });
-        console.log('mutate success 2');
       } catch (e) {
         console.log(e);
       }

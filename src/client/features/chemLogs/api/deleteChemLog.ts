@@ -11,7 +11,7 @@ export const deleteChemLog = async ({ log_Id }: { log_Id: string }, auth: Auth0C
       Authorization: `Bearer ${token}`,
     },
   });
-  console.log(response);
+
   return response;
 };
 
@@ -30,7 +30,6 @@ export const useDeleteChemLog = (
 
       const previousChemLogs = queryClient.getQueryData(['chemLogs', { auth, installation_id }]);
 
-      console.log('onMutate success');
       return { previousChemLogs };
     },
     onError: (_, __, context: any) => {

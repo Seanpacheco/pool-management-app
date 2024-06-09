@@ -13,7 +13,7 @@ export const deleteAccount = async ({ account_id }: { account_id: string }, auth
       Authorization: `Bearer ${token}`,
     },
   });
-  console.log(response);
+
   return response;
 };
 
@@ -32,7 +32,7 @@ export const useDeleteAccount = ({ config }: UseDeleteAccountOptions, auth: Auth
       //   ['accounts', { auth }],
       //   previousAccounts?.data.filter((account) => account.account_id !== deletedAccount.account_id),
       // );
-      console.log('onMutate success');
+
       return { previousAccounts };
     },
     onError: (_, __, context: any) => {

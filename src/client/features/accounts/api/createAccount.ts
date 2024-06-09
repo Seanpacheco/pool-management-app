@@ -37,8 +37,6 @@ export const useCreateAccount = ({ config }: UseCreateAccountOptions = {}, auth:
       const previousAccounts = queryClient.getQueryData<Account[]>(['accounts', { auth }]);
 
       queryClient.setQueryData(['accounts', { auth }], [previousAccounts || [], newAccount.data]);
-      console.log(previousAccounts);
-      console.log(newAccount.data);
 
       return { previousAccounts };
     },
@@ -48,12 +46,9 @@ export const useCreateAccount = ({ config }: UseCreateAccountOptions = {}, auth:
       }
     },
     onSuccess: () => {
-      console.log('mutate success');
-
       try {
         queryClient.invalidateQueries({ queryKey: ['accounts', { auth }] });
         notifications.show({ message: 'Account created', color: 'green' });
-        console.log('mutate success 2');
       } catch (e) {
         console.log(e);
       }

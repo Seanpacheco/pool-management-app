@@ -13,7 +13,7 @@ export const deleteSite = async ({ site_Id }: { site_Id: string }, auth: Auth0Co
       Authorization: `Bearer ${token}`,
     },
   });
-  console.log(response);
+
   return response;
 };
 
@@ -32,7 +32,6 @@ export const useDeleteSite = (
 
       const previousSites = queryClient.getQueryData<ServerSiteResponse>(['sites', { auth, account_id }]);
 
-      console.log('onMutate success');
       return { previousSites };
     },
     onError: (_, __, context: any) => {

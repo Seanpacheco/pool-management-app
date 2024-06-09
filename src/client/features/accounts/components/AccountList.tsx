@@ -229,7 +229,6 @@ export const AccountList = ({ setSiteSelection }: { setSiteSelection: (site_id: 
       </>
     );
   // items = accountItems;
-  console.log(accounts.data);
 
   if (error) return <div>An error occurred</div>;
 

@@ -36,7 +36,6 @@ export const ChemLogDataDisplay = ({ selectedInstallationId }: { selectedInstall
     setSelectedChemLogDateString(null);
     setSelectedDate(null);
     // setDate([dayjs(new Date()).subtract(7, 'day').toDate(), dayjs(new Date()).toDate()]);
-    console.log(chemLogs?.data);
   }, [chemLogs?.data, isSuccess]);
 
   const options = chemLogs?.data.map((item: ChemLog) => (
