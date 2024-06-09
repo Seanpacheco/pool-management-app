@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import morgan from 'morgan';
 import dayjs from 'dayjs';
+import helmet from 'helmet';
 import { db } from './db/connection';
 import { accountInitializer, accountMutator, account } from './db/schemas/public/Account';
 import { siteInitializer, siteMutator, site } from './db/schemas/public/Site';
@@ -16,11 +17,14 @@ import { z } from 'zod';
 dotenv.config();
 
 const app = express();
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use(morgan('dev'));
 app.use(cors<Request>());
+
+app.disable('x-powered-by');
 
 app.get('/hello', (_, res) => {
   res.send('Hello Vite + React + TypeScript!');
@@ -101,8 +105,6 @@ app.get('/api/v1/accounts/search/:search/page/:page', validateAccessToken, async
 
 //site endpoints
 app.get('/api/v1/sites/:id', validateAccessToken, async (req, res) => {
-  console.log('getting sites');
-
   try {
     const data = await db.sites.find(req.params.id);
     res.status(200).json({
@@ -132,9 +134,7 @@ app.post('/api/v1/sites', validateAccessToken, async (req, res) => {
         phone: req.body.phone,
       });
       res.status(200).json({ data: data, status: 'Site added and response sent successfully!' });
-      console.log(data);
-      
-    } 
+    } catch (e) {
       console.log(e);
     }
   } else {
@@ -150,10 +150,8 @@ app.delete('/api/v1/sites/:id', validateAccessToken, async (req, res) => {
   });
   if (result.success) {
     try {
-      
       const data = await db.sites.remove(req.params.id);
-      
-      
+
       res.sendStatus(204);
     } catch (e) {
       console.log(e);
@@ -166,7 +164,6 @@ app.delete('/api/v1/sites/:id', validateAccessToken, async (req, res) => {
 
 //installation endpoints
 app.post('/api/v1/installations', validateAccessToken, async (req, res) => {
-  
   const result = installationInitializer.safeParse({
     site_id: req.body.site_id,
     name: req.body.name,
@@ -190,8 +187,6 @@ app.post('/api/v1/installations', validateAccessToken, async (req, res) => {
         gallons: req.body.gallons,
       });
       res.status(200).json({ data: data, status: 'Installation added and response sent successfully!' });
-      
-      
     } catch (e) {
       console.log(e);
     }
@@ -202,22 +197,17 @@ app.post('/api/v1/installations', validateAccessToken, async (req, res) => {
 });
 
 app.get('/api/v1/installations/:site_id', validateAccessToken, async (req, res) => {
-  
-  
   const result = installationInitializer.safeParse({
     site_id: req.params.site_id,
   });
   if (result.success) {
     try {
-      
-
       const data = await db.installations.find(req.params.site_id);
-      
+
       res.status(200).json({
         data: data,
         status: 'success',
       });
-      
     } catch (e) {
       console.log(e);
     }
@@ -234,10 +224,8 @@ app.delete('/api/v1/installations/:id', validateAccessToken, async (req, res) =>
   });
   if (result.success) {
     try {
-      
       const data = await db.installations.remove(req.params.id);
-      
-      
+
       res.sendStatus(204);
     } catch (e) {
       console.log(e);
@@ -251,8 +239,6 @@ app.delete('/api/v1/installations/:id', validateAccessToken, async (req, res) =>
 //chemLog endpoints
 
 app.post('/api/v1/chemLogs', validateAccessToken, async (req, res) => {
-  
-  
   const result = chemLogInitializer.safeParse({
     installation_id: req.body.installation_id,
     log_date: req.body.log_date,
@@ -278,8 +264,6 @@ app.post('/api/v1/chemLogs', validateAccessToken, async (req, res) => {
         cynauric_acid_level: req.body.cynauric_acid_level,
       });
       res.status(200).json({ data: data, status: 'ChemLog added and response sent successfully!' });
-      
-      
     } catch (e) {
       console.log(e);
     }
@@ -290,24 +274,18 @@ app.post('/api/v1/chemLogs', validateAccessToken, async (req, res) => {
 });
 
 app.get('/api/v1/chemLogs/:installation_id/dates/:startDate/:endDate', validateAccessToken, async (req, res) => {
-  
-  
-  
-  
   const result = chemLogInitializer.safeParse({
     installation_id: req.params.installation_id,
     log_date: dayjs(req.params.startDate).format('YYYY-MM-DD HH:mm:ss'),
   });
   if (result.success) {
     try {
-      
-
       const data = await db.chemLogs.find(
         req.params.installation_id,
         dayjs(req.params.startDate).format('YYYY-MM-DD HH:mm:ss'),
         dayjs(req.params.endDate).format('YYYY-MM-DD HH:mm:ss'),
       );
-      
+
       res.status(200).json({
         data: data,
         status: 'success',
@@ -328,10 +306,8 @@ app.delete('/api/v1/chemLogs/:id', validateAccessToken, async (req, res) => {
   });
   if (result.success) {
     try {
-      
       const data = await db.chemLogs.remove(req.params.id);
-      
-      
+
       res.sendStatus(204);
     } catch (e) {
       console.log(e);
