@@ -4,13 +4,24 @@ Pool management app built using REACT and Mantine with CSS modules on the fronte
 
 > Pool & Spa maintenance tracker
 
+# Live Version
+https://pool-management-app.onrender.com
+
 An app to track chemical levels, repairs, and changes for multiple pools/spas on a professional's route.
 
 ## Features
 - Add mulitple sites per account
+![Screenshot](public/site-setting.png)
 - Add multiple pools/spas to a site
 - Log results of water balance testing
-- Allow user to save notes and view note history
+![Screenshot](public/chem-log.png)
+- Light/Dark Mode
+- ![Screenshot](public/dark-mode.png)
+- Server side search and pagination
+![Screenshot](public/search.png)
+- Client and Server side form validation
+![Screenshot](public/add-installation-validation.png)
+
 
 ### Feature Roadmap
 
