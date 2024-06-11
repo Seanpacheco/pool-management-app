@@ -106,29 +106,31 @@ export function ChemLogDataCard({
             </div>
           </Paper>
           <Paper className={classes.stat} radius="md" shadow="md" p="xs">
-            <Text className={classes.icon}>{stat.alkalinity_level ? 'n/a' : stat.alkalinity_level} ppm</Text>
+            <Text className={classes.icon}>{stat.alkalinity_level == null ? 'n/a' : stat.alkalinity_level} ppm</Text>
             <div>
               <Text className={classes.value}>Alkalinity &#128994;</Text>
             </div>
           </Paper>
           <Paper className={classes.stat} radius="md" shadow="md" p="xs">
-            <Text className={classes.icon}>{stat.calcium_level ? 'n/a' : stat.calcium_level} ppm</Text>
+            <Text className={classes.icon}>{stat.calcium_level == null ? 'n/a' : stat.calcium_level} ppm</Text>
             <div>
               <Text className={classes.value}>Calcium &#128309;</Text>
             </div>
           </Paper>
           <Paper className={classes.stat} radius="md" shadow="md" p="xs">
             <Text className={classes.icon}>
-              {stat.total_dissolved_solids_level ? 'n/a' : stat.total_dissolved_solids_level} ppm
+              {stat.total_dissolved_solids_level == null ? 'n/a' : stat.total_dissolved_solids_level} ppm
             </Text>
             <div>
               <Text className={classes.value}>Total Dissolved Solids</Text>
             </div>
           </Paper>
           <Paper className={classes.stat} radius="md" shadow="md" p="xs">
-            <Text className={classes.icon}>{stat.cynauric_acid_level ? 'n/a' : stat.cynauric_acid_level} ppm</Text>
+            <Text className={classes.icon}>
+              {stat.cyanuric_acid_level == null ? 'n/a' : stat.cyanuric_acid_level} ppm
+            </Text>
             <div>
-              <Text className={classes.value}>Cynauric Acid</Text>
+              <Text className={classes.value}>Cyanuric Acid</Text>
             </div>
           </Paper>
         </Group>

@@ -248,7 +248,7 @@ app.post('/api/v1/chemLogs', validateAccessToken, async (req, res) => {
     alkalinity_level: req.body.alkalinity_level,
     calcium_level: req.body.calcium_level,
     total_dissolved_solids_level: req.body.total_dissolved_solids_level,
-    cynauric_acid_level: req.body.cynauric_acid_level,
+    cyanuric_acid_level: req.body.cyanuric_acid_level,
   });
   if (result.success) {
     try {
@@ -261,7 +261,7 @@ app.post('/api/v1/chemLogs', validateAccessToken, async (req, res) => {
         alkalinity_level: req.body.alkalinity_level,
         calcium_level: req.body.calcium_level,
         total_dissolved_solids_level: req.body.total_dissolved_solids_level,
-        cynauric_acid_level: req.body.cynauric_acid_level,
+        cyanuric_acid_level: req.body.cyanuric_acid_level,
       });
       res.status(200).json({ data: data, status: 'ChemLog added and response sent successfully!' });
     } catch (e) {

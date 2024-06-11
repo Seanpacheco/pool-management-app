@@ -23,7 +23,7 @@ export default interface ChemLog {
 
   alkalinity_level: number | null;
 
-  cynauric_acid_level: number | null;
+  cyanuric_acid_level: number | null;
 
   total_dissolved_solids_level: number | null;
 }
@@ -47,7 +47,7 @@ export interface ChemLogInitializer {
 
   alkalinity_level?: number | null;
 
-  cynauric_acid_level?: number | null;
+  cyanuric_acid_level?: number | null;
 
   total_dissolved_solids_level?: number | null;
 }
@@ -68,7 +68,7 @@ export interface ChemLogMutator {
 
   alkalinity_level?: number | null;
 
-  cynauric_acid_level?: number | null;
+  cyanuric_acid_level?: number | null;
 
   total_dissolved_solids_level?: number | null;
 }
@@ -83,7 +83,7 @@ export const chemLog = z.object({
   sanitizer_level: z.number().nullable(),
   ph_level: z.number().nullable(),
   alkalinity_level: z.number().nullable(),
-  cynauric_acid_level: z.number().nullable(),
+  cyanuric_acid_level: z.number().nullable(),
   total_dissolved_solids_level: z.number().nullable(),
 }) as unknown as z.Schema<ChemLog>;
 
@@ -95,7 +95,7 @@ export const chemLogInitializer = z.object({
   sanitizer_level: z.number().optional().nullable(),
   ph_level: z.number().optional().nullable(),
   alkalinity_level: z.number().optional().nullable(),
-  cynauric_acid_level: z.number().optional().nullable(),
+  cyanuric_acid_level: z.number().optional().nullable(),
   total_dissolved_solids_level: z.number().optional().nullable(),
 }) as unknown as z.Schema<ChemLogInitializer>;
 
@@ -107,6 +107,6 @@ export const chemLogMutator = z.object({
   sanitizer_level: z.number().optional().nullable(),
   ph_level: z.number().optional().nullable(),
   alkalinity_level: z.number().optional().nullable(),
-  cynauric_acid_level: z.number().optional().nullable(),
+  cyanuric_acid_level: z.number().optional().nullable(),
   total_dissolved_solids_level: z.number().optional().nullable(),
 }) as unknown as z.Schema<ChemLogMutator>;
