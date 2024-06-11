@@ -22,8 +22,8 @@ export const CreateChemLogForm = ({ selectedInstallationId }: { selectedInstalla
     phLevel: z.number({ message: 'Must be a number' }),
     alkalinityLevel: z.number({ message: 'Must be a number' }).nullable(),
     calciumLevel: z.number({ message: 'Must be a number' }).nullable(),
-    totalDissolvedSolids: z.number({ message: 'Must be a number' }).nullable(),
-    cyanuricAcid: z.number({ message: 'Must be a number' }).nullable(),
+    totalDissolvedSolidsLevel: z.number({ message: 'Must be a number' }).nullable(),
+    cyanuricAcidLevel: z.number({ message: 'Must be a number' }).nullable(),
     logDate: z.date({ message: 'Must pick a date' }),
   });
 
@@ -34,8 +34,8 @@ export const CreateChemLogForm = ({ selectedInstallationId }: { selectedInstalla
       phLevel: 7.6,
       alkalinityLevel: null,
       calciumLevel: null,
-      totalDissolvedSolids: null,
-      cyanuricAcid: null,
+      totalDissolvedSolidsLevel: null,
+      cyanuricAcidLevel: null,
       logDate: null,
     },
 
@@ -75,8 +75,8 @@ export const CreateChemLogForm = ({ selectedInstallationId }: { selectedInstalla
                     ph_level: form.getValues().phLevel,
                     alkalinity_level: form.getValues().alkalinityLevel,
                     calcium_level: form.getValues().calciumLevel,
-                    total_dissolved_solids_level: form.getValues().totalDissolvedSolids,
-                    cynauric_acid_level: form.getValues().cyanuricAcid,
+                    total_dissolved_solids_level: form.getValues().totalDissolvedSolidsLevel,
+                    cyanuric_acid_level: form.getValues().cyanuricAcidLevel,
                     installation_id: selectedInstallationId,
                     log_date: form.getValues().logDate,
                   },
@@ -187,15 +187,15 @@ export const CreateChemLogForm = ({ selectedInstallationId }: { selectedInstalla
                     label="Total Dissolved Solids"
                     allowNegative={false}
                     placeholder="parts per million"
-                    {...form.getInputProps('totalDissolvedSolids')}
-                    key={form.key('totalDissolvedSolids')}
+                    {...form.getInputProps('totalDissolvedSolidsLevel')}
+                    key={form.key('totalDissolvedSolidsLevel')}
                   />
                   <NumberInput
                     label="Cynaurc Acid"
                     allowNegative={false}
                     placeholder="parts per million"
-                    {...form.getInputProps('cynauricAcidLevel')}
-                    key={form.key('cynauricAcidLevel')}
+                    {...form.getInputProps('cyanuricAcidLevel')}
+                    key={form.key('cyanuricAcidLevel')}
                   />
                 </Flex>
               </Fieldset>
