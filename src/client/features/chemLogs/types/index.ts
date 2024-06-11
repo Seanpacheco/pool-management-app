@@ -10,6 +10,6 @@ export type ChemLog = {
   ph_level: number;
   alkalinity_level: number | null;
   calcium_level: number | null;
-  cynauric_acid_level: number | null;
+  cyanuric_acid_level: number | null;
   total_dissolved_solids_level: number | null;
 } & BaseEntity;

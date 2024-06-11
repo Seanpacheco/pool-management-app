@@ -21,7 +21,7 @@ export class ChemLogsRepository {
     alkalinity_level: number | null;
     calcium_level: number | null;
     total_dissolved_solids_level: number | null;
-    cynauric_acid_level: number | null;
+    cyanuric_acid_level: number | null;
   }): Promise<ChemLog> {
     return db.one(sql.add, {
       installation_id: values.installation_id,
@@ -32,7 +32,7 @@ export class ChemLogsRepository {
       alkalinity_level: values.alkalinity_level,
       calcium_level: values.calcium_level,
       total_dissolved_solids_level: values.total_dissolved_solids_level,
-      cynauric_acid_level: values.cynauric_acid_level,
+      cyanuric_acid_level: values.cyanuric_acid_level,
     });
   }
   find(installation_id: string | Promise<AppUser>, startDate: string, endDate: string): Promise<ChemLog[]> {
