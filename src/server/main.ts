@@ -318,4 +318,6 @@ app.delete('/api/v1/chemLogs/:id', validateAccessToken, async (req, res) => {
   }
 });
 
-ViteExpress.listen(app, 3000, () => console.log('Server is listening on port 3000...'));
+ViteExpress.listen(app, parseInt(process.env.PORT || '3000', 10), () =>
+  console.log(`Server is listening on port ${process.env.PORT}...`),
+);
