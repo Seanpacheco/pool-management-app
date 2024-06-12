@@ -13,12 +13,12 @@ export function LandingPage() {
         <h1 className={classes.title}>
           A{' '}
           <Text component="span" variant="gradient" gradient={{ from: 'seaGreen.4', to: 'seaGreen.8' }} inherit>
-            fully featured
+            Fully-Featured
           </Text>{' '}
-          Pool management system
+          Pool Management System
         </h1>
         <Text className={classes.description} color="dimmed">
-          Manage your pool and spa, track your chemical levels, get reccomendations and more.
+          Manage your pool and spa, track your chemical levels, get recommendations, and more.
         </Text>
         <Group className={classes.controls}>
           <SignUpButton />
