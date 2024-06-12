@@ -38,7 +38,7 @@ export function ChemLogDataCard({
           Are you sure you want to delete this chem log? This action is destructive and irreversible.
         </Text>
       ),
-      labels: { confirm: 'Delete Chem Log', cancel: "No don't delete it" },
+      labels: { confirm: 'Delete Chem Log', cancel: "No, don't delete it" },
       confirmProps: { color: 'red' },
       onCancel: () => console.log('Cancel'),
       onConfirm: () =>

@@ -18,7 +18,7 @@ export function InstallationOptions({ installationId, site_id }: { installationI
           Are you sure you want to delete this installation? This action is destructive and irreversible.
         </Text>
       ),
-      labels: { confirm: 'Delete Installation', cancel: "No don't delete it" },
+      labels: { confirm: 'Delete Installation', cancel: "No, don't delete it" },
       confirmProps: { color: 'red' },
       onCancel: () => console.log('Cancel'),
       onConfirm: () =>

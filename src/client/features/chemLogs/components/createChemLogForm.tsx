@@ -87,8 +87,8 @@ export const CreateChemLogForm = ({ selectedInstallationId }: { selectedInstalla
           >
             <Flex justify="center" gap="md" direction="column">
               <DatePickerInput
-                label="Pick date"
-                placeholder="Pick date"
+                label="Date"
+                placeholder="Date"
                 withAsterisk
                 error={form.errors.logDate}
                 value={value}
