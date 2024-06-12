@@ -84,7 +84,7 @@ export const CreateInstallationForm = ({ selectedSiteId }: { selectedSiteId: str
         <TextInput
           withAsterisk
           label="Installation Name"
-          placeholder="installation name"
+          placeholder="Installation Name"
           key={form.key('installationName')}
           {...form.getInputProps('installationName')}
         />

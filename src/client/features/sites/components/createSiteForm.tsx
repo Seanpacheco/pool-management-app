@@ -74,14 +74,14 @@ export const CreateSiteForm = ({ account_Id }: { account_Id: string }) => {
         <TextInput
           withAsterisk
           label="Address"
-          placeholder="address"
+          placeholder="Address"
           key={form.key('address')}
           {...form.getInputProps('address')}
         />
         <TextInput
           withAsterisk
           label="Postal Code"
-          placeholder="postal code"
+          placeholder="Postal Code"
           key={form.key('postal_code')}
           {...form.getInputProps('postal_code')}
         />
@@ -96,7 +96,7 @@ export const CreateSiteForm = ({ account_Id }: { account_Id: string }) => {
           <Input
             component={IMaskInput}
             mask="+1 (000) 000-0000"
-            placeholder="phone number"
+            placeholder="Phone Number"
             {...form.getInputProps('phone')}
           />
         </Input.Wrapper>

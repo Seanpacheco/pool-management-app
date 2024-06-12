@@ -68,7 +68,7 @@ export const CreateAccountForm = () => {
         <TextInput
           withAsterisk
           label="Account Name"
-          placeholder="account name"
+          placeholder="Account Name"
           key={form.key('accountName')}
           {...form.getInputProps('accountName')}
         />
@@ -83,7 +83,7 @@ export const CreateAccountForm = () => {
           <Input
             component={IMaskInput}
             mask="+1 (000) 000-0000"
-            placeholder="phone number"
+            placeholder="Phone Number"
             {...form.getInputProps('phone')}
           />
         </Input.Wrapper>

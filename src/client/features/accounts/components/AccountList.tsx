@@ -124,7 +124,7 @@ export const AccountList = ({ setSiteSelection }: { setSiteSelection: (site_id: 
           Are you sure you want to delete this account? This action is destructive and irreversible.
         </Text>
       ),
-      labels: { confirm: 'Delete account', cancel: "No don't delete it" },
+      labels: { confirm: 'Delete account', cancel: "No, don't delete it" },
       confirmProps: { color: 'red' },
       onCancel: () => console.log('Cancel'),
       onConfirm: () =>
